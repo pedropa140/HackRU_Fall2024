@@ -1,0 +1,100 @@
+#TermsOfService {
+    width: 100vw;
+    min-height: 100vh;
+    background-color: #f3f3f3;
+    transition: background-color 0.3s ease;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    box-sizing: border-box;
+}
+
+#TermsOfService.dark-mode {
+    background-color: #333;
+    color: #f0f0f0;
+}
+
+#TermsOfService.dark-mode .NavBar {
+    background-color: #333;
+}
+
+.terms-of-service-content {
+    padding-top: 130px;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#TermsOfService.dark-mode .terms-of-service-content {
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+}
+
+.terms-of-service-content h1 {
+    font-size: 2.8em;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+}
+
+#TermsOfService.dark-mode .terms-of-service-content h1 {
+    color: #f0f0f0;
+    border-color: #444;
+}
+
+.terms-of-service-content h2 {
+    font-size: 2.2em;
+    margin-top: 30px;
+    color: #333;
+    border-left: 4px solid #66cfff;
+    padding-left: 15px;
+}
+
+#TermsOfService.dark-mode .terms-of-service-content h2 {
+    color: #f0f0f0;
+    border-left-color: #007acc;
+}
+
+.terms-of-service-content p, .terms-of-service-content ul {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin: 15px 0;
+}
+
+.terms-of-service-content ul {
+    padding-left: 20px;
+}
+
+.TermsOfService_footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #eee;
+}
+
+.TermsOfService_footer .footer_links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.TermsOfService_footer .footer_links a {
+    text-decoration: none;
+    color: #007acc;
+}
+
+.TermsOfService_footer .footer_links a:hover {
+    text-decoration: underline;
+}
+
+.TermsOfService_footer p {
+    margin-top: 10px;
+    font-size: 0.9em;
+}
