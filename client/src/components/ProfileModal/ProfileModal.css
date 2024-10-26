@@ -1,0 +1,281 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: all 0.3s ease-in-out;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+    position: relative;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+}
+
+.NavBar .modal-content h1 {
+    color: #66cfff;
+}
+
+.update-profile-content {
+    flex: 1;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.update-profile-content button {
+    padding: 10px 20px;
+    font-weight: bolder;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease-in-out, transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    background-color: #66cfff;
+    color: white;
+}
+
+.update-profile h2, .password-update h2 {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 24px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.update-profile h2 button, .password-update h2 button {
+    cursor: pointer;
+    color: black;
+    font-weight: bolder;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-size: inherit;
+    text-align: left;
+    outline: none;
+    transition: color 0.2s;
+}
+
+.update-profile-content label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dark-mode.update-profile h2 button, .dark-mode.password-update h2 button {
+    color: #66cfff;
+}
+
+.user-info-display {
+    margin: 20px 0;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+}
+
+.user-info-display h3 {
+    margin-bottom: 10px;
+}
+
+.user-info-display p {
+    margin: 5px 0;
+    font-size: 15px;
+}
+
+.dark-mode.user-info-display {
+    background-color: #1f1f1f;
+    color: white;
+}
+
+.modal-overlay .modal-content .modal-header .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    font-weight: 900;
+    border: none;
+    font-size: 12px;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.modal-content .close-button:hover {
+    color: red;
+}
+
+.dark-mode.modal-overlay .modal-content .modal-header .close-button {
+    color: white;
+}
+
+.update-profile-content input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border 0.2s ease-in-out;
+}
+
+.update-profile-content input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.modal-actions button {
+    padding: 10px 20px;
+    font-weight: bolder;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease-in-out, transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.cancel-button {
+    background-color: #efefef;
+    color: #333;
+}
+
+.cancel-button:hover {
+    background-color: #ccc;
+    transform: translateY(-1px);
+}
+
+.save-button {
+    background-color: #66cfff;
+    color: white;
+}
+
+.save-button:hover {
+    /* background-color: #0073a1; */
+    transform: translateY(-1px);
+}
+
+.modal-actions button:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+@media (max-width: 600px) {
+    .modal-content {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .modal-content h2 {
+        font-size: 20px;
+    }
+
+    .modal-actions button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dark-mode .modal-content {
+    background-color: #333;
+    color: #fff;
+}
+
+.dark-mode .modal-content h2,
+.dark-mode .modal-content label {
+    color: #fff;
+}
+
+.dark-mode .modal-content input {
+    background-color: #555;
+    color: #fff;
+    border: 1px solid #777;
+}
+
+.dark-mode .modal-content input:focus {
+    border-color: #007bff;
+}
+
+.dark-mode .modal-actions button.cancel-button {
+    background-color: #444;
+    color: #fff;
+}
+
+.dark-mode .modal-actions button.cancel-button:hover {
+    background-color: #555;
+    transform: translateY(-1px);
+}
+
+.dark-mode .modal-actions button.save-button {
+    background-color: #0073a1;
+}
+
+.dark-mode .modal-actions button.save-button:hover {
+    background-color: #005f8f;
+    transform: translateY(-1px);
+}
+
+.update-profile-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.update-profile-content::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+.update-profile-content::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
