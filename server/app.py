@@ -69,6 +69,9 @@ class Patient (Document):
     foodTracker = ListField(StringField())
 CORS(app)
 
+def set_password(self, raw_password):
+        hashed = bcrypt.hashpw(raw_password.encode('utf-8'), bcrypt.gensalt())
+        self.password = hashed.decode('utf-8')
 
 
 @app.route('/api/patientSignup')
