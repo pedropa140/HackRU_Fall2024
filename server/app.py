@@ -53,22 +53,22 @@ class Insurance(EmbeddedDocument):
     coverage = StringField()
 
 class Activity(EmbeddedDocument):
-    "Name" = StringField(required=True),
-    "Type" = StringField(required=True),
-    "Date" = DateTimeField(required=True),
-    "Location" = ListField(EmbeddedDocumentField(Coordinate))
+    Name = StringField(required=True),
+    Type = StringField(required=True),
+    Date = DateTimeField(required=True),
+    Location = ListField(EmbeddedDocumentField(Coordinate))
 class Patient (Document):
-        "firstName"= StringField(required=True),
-        "lastName" = StringField(required=True),
-        "email" = EmailField(required=True),
-        "DOB" = DateTimeField(required=True),
-        "password" = StringField(required=True),
-        "coordinates" = Coordinate
-        "appointments" = ListField(EmbeddedDocumentField(Appointment))
-        "insurance" = Insurance
-        "activities" = ListField(EmbeddedDocumentField(Activity))
-        "primaryProvider" = PrimaryProvider
-        "foodTracker" = ListField(StringField)
+    firstName = StringField(required=True),
+    lastName = StringField(required=True),
+    email = EmailField(required=True),
+    DOB = DateTimeField(required=True),
+    password = StringField(required=True),
+    coordinates = Coordinate
+    appointments = ListField(EmbeddedDocumentField(Appointment))
+    insurance = Insurance
+    activities = ListField(EmbeddedDocumentField(Activity))
+    primaryProvider = PrimaryProvider
+    foodTracker = ListField(StringField)
 CORS(app)
 
 
