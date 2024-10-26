@@ -16,12 +16,12 @@ const SignUpPage = ({ toggleDarkMode, isDarkMode }) => {
         firstname: '',
         lastname: '',
         email: '',
-        birthday: '',
+        dob: '',
         password: '',
         reenterpassword: '',
         insurance_name: '',
-        insurance_provider: '',
-        insurance_groupNumber: ''
+        policy_number: '',
+        group_number: ''
     });
     const [passwordError, setPasswordError] = useState('');
     const [showNotification, setShowNotification] = useState(false);
@@ -100,7 +100,7 @@ const SignUpPage = ({ toggleDarkMode, isDarkMode }) => {
                         
                         {/* DATE OF BIRTH */}
                         <label for="birthday">Date of Birth:</label>
-                        <input type="date" id="birthday" name="birthday" value={formData.birthday} onChange={handleChange}/>
+                        <input type="date" id="dob" name="dob" value={formData.dob} onChange={handleChange}/>
 
                         <label htmlFor="password">Password<span style={{ color: "red" }}> *</span></label>
                         <input type="password" id="password" value={formData.password} onChange={handleChange} placeholder="Enter your password" required />
@@ -113,13 +113,13 @@ const SignUpPage = ({ toggleDarkMode, isDarkMode }) => {
                         {/* name, provider, groupnumber*/}
 
                         <label htmlFor="insurance_name">Insurance Name<span style={{ color: "red" }}> *</span></label>
-                        <input type="text" id="insurance_name" value={formData.insurance_name} onChange={handleChange} placeholder="Enter your insurance name" required />
+                        <input type="text" id="insurancename" value={formData.insurancename} onChange={handleChange} placeholder="Enter your insurance name" required />
 
                         <label htmlFor="insurance_provider">Insurance Provider<span style={{ color: "red" }}> *</span></label>
-                        <input type="text" id="insurance_provider" value={formData.insurance_provider} onChange={handleChange} placeholder="Enter your insurance provider" required />
+                        <input type="text" id="policy_number" value={formData.policy_number} onChange={handleChange} placeholder="Enter your insurance provider" required />
 
                         <label htmlFor="insurance_groupNumber">Insurance Group Number<span style={{ color: "red" }}> *</span></label>
-                        <input type="text" id="insurance_groupNumber" value={formData.insurance_groupNumber} onChange={handleChange} placeholder="Enter your group number" required />
+                        <input type="text" id="group_number" value={formData.group_number} onChange={handleChange} placeholder="Enter your group number" required />
 
                         <div className="privacy-policy-checkbox">
                             <input
