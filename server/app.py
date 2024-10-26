@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
-import bcrypt
 from dotenv import load_dotenv
 import os
 import mongoengine
@@ -65,20 +64,17 @@ class Patient (Document):
     password = StringField(required=True)
     coordinates = Coordinate
     appointments = ListField(EmbeddedDocumentField(Appointment))
-    insurance = Insurance
+    insurance = Insurance(required=True)
     activities = ListField(EmbeddedDocumentField(Activity))
-    primaryProvider = PrimaryProvider
+    primaryProvider = PrimaryProvider(required=True)
     foodTracker = ListField(StringField)
 CORS(app)
 
 
 
-def set_password(self, raw_password):
-        hashed = bcrypt.hashpw(raw_password.encode('utf-8'), bcrypt.gensalt())
-        self.password = hashed.decode('utf-8')
-
-def check_password(self, raw_password):
-        return bcrypt.checkpw(raw_password.encode('utf-8'), self.password.encode('utf-8'))
+@app.route('/api/patientSignup')
+def patientSignup():
+    
 
 @app.route('/api/signup', methods=['POST'])
 def signup():
