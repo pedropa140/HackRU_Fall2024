@@ -54,7 +54,7 @@ const AboutPage = ({ toggleDarkMode, isDarkMode }) => {
       <div className='AboutPage_hero'>
         <h1 className='hero_title'>About Us</h1>
         <p className='hero_subtitle'>
-          Welcome to [Your Company Name], where innovation meets dedication.
+          Welcome to Memory+, where you are cared.
         </p>
       </div>
       <div className='AboutPage_content'>
