@@ -15,10 +15,13 @@ const SignUpPage = ({ toggleDarkMode, isDarkMode }) => {
     const [formData, setFormData] = useState({
         firstname: '',
         lastname: '',
-        username: '',
         email: '',
+        birthday: '',
         password: '',
-        reenterpassword: ''
+        reenterpassword: '',
+        insurance_name: '',
+        insurance_provider: '',
+        insurance_groupNumber: ''
     });
     const [passwordError, setPasswordError] = useState('');
     const [showNotification, setShowNotification] = useState(false);
@@ -45,8 +48,9 @@ const SignUpPage = ({ toggleDarkMode, isDarkMode }) => {
         }
 
         setPasswordError('');
+        console.log(formData)
 
-        fetch('/api/signup', {
+        fetch('/api/patientSignup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -91,17 +95,31 @@ const SignUpPage = ({ toggleDarkMode, isDarkMode }) => {
                         <label htmlFor="lastname">Last Name<span style={{ color: "red" }}> *</span></label>
                         <input type="text" id="lastname" value={formData.lastname} onChange={handleChange} placeholder="Enter your last name" required />
 
-                        <label htmlFor="username">Username<span style={{ color: "red" }}> *</span></label>
-                        <input type="text" id="username" value={formData.username} onChange={handleChange} placeholder="Enter your username" required />
-
                         <label htmlFor="email">Email<span style={{ color: "red" }}> *</span></label>
                         <input type="email" id="email" value={formData.email} onChange={handleChange} placeholder="Enter your email" required />
+                        
+                        {/* DATE OF BIRTH */}
+                        <label for="birthday">Date of Birth:</label>
+                        <input type="date" id="birthday" name="birthday" value={formData.birthday} onChange={handleChange}/>
 
                         <label htmlFor="password">Password<span style={{ color: "red" }}> *</span></label>
                         <input type="password" id="password" value={formData.password} onChange={handleChange} placeholder="Enter your password" required />
-
+                        
                         <label htmlFor="reenterpassword">Re-Enter Password<span style={{ color: "red" }}> *</span></label>
                         <input type="password" id="reenterpassword" value={formData.reenterpassword} onChange={handleChange} placeholder="Re-enter your password" required />
+
+
+                        {/* INSURANCE */}
+                        {/* name, provider, groupnumber*/}
+
+                        <label htmlFor="insurance_name">Insurance Name<span style={{ color: "red" }}> *</span></label>
+                        <input type="text" id="insurance_name" value={formData.insurance_name} onChange={handleChange} placeholder="Enter your insurance name" required />
+
+                        <label htmlFor="insurance_provider">Insurance Provider<span style={{ color: "red" }}> *</span></label>
+                        <input type="text" id="insurance_provider" value={formData.insurance_provider} onChange={handleChange} placeholder="Enter your insurance provider" required />
+
+                        <label htmlFor="insurance_groupNumber">Insurance Group Number<span style={{ color: "red" }}> *</span></label>
+                        <input type="text" id="insurance_groupNumber" value={formData.insurance_groupNumber} onChange={handleChange} placeholder="Enter your group number" required />
 
                         <div className="privacy-policy-checkbox">
                             <input
