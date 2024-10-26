@@ -1,0 +1,146 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+.modal-content.dark-mode {
+    background-color: #333;
+    color: #ddd;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.modal-content.dark-mode .close-button {
+    color: #ddd;
+}
+
+.modal-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+.modal-content.dark-mode .modal-title {
+    color: #ddd;
+}
+
+.signin-form label {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #333;
+    display: block;
+}
+
+.modal-content.dark-mode .signin-form label {
+    color: #ddd;
+}
+
+.signin-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.modal-content.dark-mode .signin-form input {
+    background-color: #555;
+    border: 1px solid #888;
+    color: #ddd;
+}
+
+.signin-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #66cfff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: bolder;
+}
+
+.signin-button:hover {
+    background-color: #4fb1e6;
+}
+
+.signup-prompt {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+.signup-link {
+    color: #66cfff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
+
+.modal-content.dark-mode .signup-link {
+    color: #66cfff;
+}
+
+.modal-content p {
+    color: #333;
+}
+
+.dark-mode .modal-content p {
+    color: #ccc;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

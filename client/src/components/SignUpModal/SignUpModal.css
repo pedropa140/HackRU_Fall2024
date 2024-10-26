@@ -1,0 +1,169 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+.modal-content.dark-mode {
+    background-color: #333;
+    color: #ddd;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-button:hover {
+    color: #333;
+}
+
+.modal-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal-content p {
+    color: #333;
+}
+
+.dark-mode .modal-content p {
+    color: #ccc;
+}
+
+.signin-form label {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    display: block;
+    transition: color 0.3s ease;
+}
+
+.signin-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.modal-content.dark-mode .signin-form input {
+    background-color: #555;
+    border: 1px solid #888;
+    color: #ddd;
+}
+
+.signup-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #66cfff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-weight: bold;
+}
+
+.signup-button:hover {
+    background-color: #4fb1e6;
+    transform: translateY(-3px);
+}
+
+.signup-prompt {
+    text-align: center;
+    color: #333;
+    margin-top: 15px;
+    transition: color 0.3s ease;
+}
+
+.signup-link {
+    color: #66cfff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
+
+.privacy-policy-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    height: auto;
+    transition: all 0.3s ease;
+}
+
+.privacy-policy-checkbox input {
+    margin-right: 10px;
+    width: auto;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.privacy-policy-checkbox label {
+    margin-right: auto;
+    margin-left: 0px;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease;
+}
+
+.privacy-policy-checkbox a {
+    margin-left: 5px;
+    margin-right: 5px;
+    font-weight: bolder;
+    color: #4fb1e6;
+    transition: color 0.3s ease;
+}
+
+.privacy-policy-checkbox a:hover {
+    color: #66cfff;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

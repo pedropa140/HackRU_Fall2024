@@ -1,0 +1,98 @@
+#SignInPage {
+    width: 100vw;
+    height: 100vh;
+    background-color: #f3f3f3;
+    transition: background-color 0.3s ease;
+    font-family: 'Arial', sans-serif;
+    /* color: #333; */
+    background-color: #333;
+}
+
+#SignInPage.dark-mode .NavBar {
+    background-color: #333;
+}
+
+#SignInPage.dark-mode {
+    background-color: #121212;
+    color: #f0f0f0;
+}
+
+.SignInPage_hero {
+    text-align: center;
+    padding: 130px 20px 90px;
+    background-color: #66cfff;
+    color: white;
+    border-bottom: 5px solid #004f7a;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#SignInPage.dark-mode .SignInPage_hero {
+    background-color: #333;
+    color: #ffffff;
+}
+
+.hero_title {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.signin_modal-content {
+    margin: 21px auto 0;
+}
+
+.signin-form label {
+    display: block;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+.signin-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#SignInPage.dark-mode .signin-form input {
+    background-color: #555;
+    border: 1px solid #888;
+    color: #ddd;
+}
+
+.signin-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #66cfff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+}
+
+.signin-button:hover {
+    background-color: #4fb1e6;
+}
+
+.signup-prompt {
+    text-align: center;
+    color: #333;
+    margin-top: 15px;
+}
+
+.signup-link {
+    color: #66cfff;
+    text-decoration: none;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
