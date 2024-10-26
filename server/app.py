@@ -53,43 +53,31 @@ class Insurance(EmbeddedDocument):
     coverage = StringField()
 
 class Activity(EmbeddedDocument):
-    name = StringField(required=True)
-    type = StringField(required=True)
-    date = DateTimeField(required=True)
-    location = ListField(EmbeddedDocumentField(Coordinate))
-
-class Patient(Document):
-    first_name = StringField(required=True)
-    last_name = StringField(required=True)
-    email = EmailField(required=True)
-    dob = DateTimeField(required=True)
-    password = StringField(required=True)
-    coordinates = EmbeddedDocumentField(Coordinate)
-    appointments = ListField(EmbeddedDocumentField(Appointment))
-    insurance = EmbeddedDocumentField(Insurance)
-    activities = ListField(EmbeddedDocumentField(Activity))
-    primary_provider = EmbeddedDocumentField(PrimaryProvider)
-    food_tracker = ListField(StringField())
-
+    "Name" = StringField(required=True),
+    "Type" = StringField(required=True),
+    "Date" = DateTimeField(required=True),
+    "Location" = ListField(EmbeddedDocumentField(Coordinate))
+class Patient (Document):
+        "firstName"= StringField(required=True),
+        "lastName" = StringField(required=True),
+        "email" = EmailField(required=True),
+        "DOB" = DateTimeField(required=True),
+        "password" = StringField(required=True),
+        "coordinates" = Coordinate
+        "appointments" = ListField(EmbeddedDocumentField(Appointment))
+        "insurance" = Insurance
+        "activities" = ListField(EmbeddedDocumentField(Activity))
+        "primaryProvider" = PrimaryProvider
+        "foodTracker" = ListField(StringField)
 CORS(app)
 
-class User(Document):
-    firstname = StringField(required=True, max_length=50)
-    lastname = StringField(required=True, max_length=50)
-    username = StringField(required=True, unique=True, max_length=30)
-    email = EmailField(required=True, unique=True)
-    password = StringField(required=True, min_length=8)
-    created_at = DateTimeField(default=datetime.now(timezone.utc))
 
-    meta = {
-        'collection': 'users'
-    }
 
-    def set_password(self, raw_password):
+def set_password(self, raw_password):
         hashed = bcrypt.hashpw(raw_password.encode('utf-8'), bcrypt.gensalt())
         self.password = hashed.decode('utf-8')
 
-    def check_password(self, raw_password):
+def check_password(self, raw_password):
         return bcrypt.checkpw(raw_password.encode('utf-8'), self.password.encode('utf-8'))
 
 @app.route('/api/signup', methods=['POST'])
