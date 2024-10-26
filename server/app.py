@@ -67,25 +67,24 @@ class Patient (Document):
         "activities" = ListField(EmbeddedDocumentField(Activity))
         "primaryProvider" = PrimaryProvider
         "foodTracker" = ListField(StringField)
+        
+class Caregiver (Document):
+    "firstName" = StringField(required=True),
+    "lastName" = StringField(required=True),
+    "email" = StringField(required=True),
+    "password" = StringField(required=True),
+    "coordinates" = Coordinate,
+    patients = ListField(Patient)
+
 CORS(app)
 
-class User(Document):
-    firstname = StringField(required=True, max_length=50)
-    lastname = StringField(required=True, max_length=50)
-    username = StringField(required=True, unique=True, max_length=30)
-    email = EmailField(required=True, unique=True)
-    password = StringField(required=True, min_length=8)
-    created_at = DateTimeField(default=datetime.now(timezone.utc))
 
-    meta = {
-        'collection': 'users'
-    }
 
-    def set_password(self, raw_password):
+def set_password(self, raw_password):
         hashed = bcrypt.hashpw(raw_password.encode('utf-8'), bcrypt.gensalt())
         self.password = hashed.decode('utf-8')
 
-    def check_password(self, raw_password):
+def check_password(self, raw_password):
         return bcrypt.checkpw(raw_password.encode('utf-8'), self.password.encode('utf-8'))
 
 @app.route('/api/signup', methods=['POST'])
