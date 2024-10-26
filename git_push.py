@@ -21,4 +21,4 @@ def git_push(branch="master"):
         print(f"{RED}git reset.{RESET}")
 
 if __name__ == "__main__":
-    git_push(input("Enter Branch Name:\t"))
+    git_push("main")
