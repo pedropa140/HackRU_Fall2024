@@ -30,5 +30,280 @@ mongoengine.connect(host=MONGODB_URL, tlsCAFile=certifi.where())
 
 CORS(app)
 
+class User(Document):
+    firstname = StringField(required=True, max_length=50)
+    lastname = StringField(required=True, max_length=50)
+    username = StringField(required=True, unique=True, max_length=30)
+    email = EmailField(required=True, unique=True)
+    password = StringField(required=True, min_length=8)
+    created_at = DateTimeField(default=datetime.now(timezone.utc))
+
+    meta = {
+        'collection': 'users'
+    }
+
+    def set_password(self, raw_password):
+        hashed = bcrypt.hashpw(raw_password.encode('utf-8'), bcrypt.gensalt())
+        self.password = hashed.decode('utf-8')
+
+    def check_password(self, raw_password):
+        return bcrypt.checkpw(raw_password.encode('utf-8'), self.password.encode('utf-8'))
+
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    form_data = request.json
+
+    firstname = form_data.get('firstname')
+    lastname = form_data.get('lastname')
+    username = form_data.get('username')
+    email = form_data.get('email')
+    password = form_data.get('password')
+    
+    if User.objects(username=username).first():
+        return jsonify({"message": "Username already exists!"}), 400
+    if User.objects(email=email).first():
+        return jsonify({"message": "Email already exists!"}), 400
+
+    try:
+        user = User(
+            firstname=firstname,
+            lastname=lastname,
+            username=username,
+            email=email
+        )
+        user.set_password(password)
+        user.save()
+
+        return jsonify({"message": "User registered successfully!"}), 201
+    except ValidationError as ve:
+        return jsonify({"message": str(ve)}), 400
+    except Exception as e:
+        return jsonify({"message": "An error occurred while creating the user."}), 500
+
+@app.route('/api/signin', methods=['POST'])
+def signin():
+    form_data = request.json
+
+    email = form_data.get('email')
+    password = form_data.get('password')
+
+    user = User.objects(email=email).first()
+
+    if not user:
+        return jsonify({"message": "User not found!"}), 404
+
+    if not user.check_password(password):
+        return jsonify({"message": "Incorrect password!"}), 401
+
+    return jsonify({
+        "message": "Signed in successfully!",
+        "email": user.email,
+    }), 200
+
+@app.route('/api/userinfo', methods=['GET'])
+def get_user_info():
+    user_email = request.args.get('email')
+
+    user = User.objects(email=user_email).first()
+
+    if user:
+        return jsonify({
+            "firstname": user.firstname,
+            "lastname": user.lastname,
+            "username": user.username,
+            "email": user.email,
+            "datecreated": user.created_at
+        }), 200
+    else:
+        return jsonify({"message": "User not found!"}), 404
+
+@app.route('/api/updateuserinfo', methods=['PUT'])
+def update_user_info():
+    data = request.json
+
+    user_email = data.get('email')
+    new_firstname = data.get('firstname')
+    new_lastname = data.get('lastname')
+    new_username = data.get('username')
+
+    user = User.objects(email=user_email).first()
+
+    if user:
+        user.update(
+            set__firstname=new_firstname,
+            set__lastname=new_lastname,
+            set__username=new_username
+        )
+        return jsonify({"message": "User information updated successfully!"}), 200
+    else:
+        return jsonify({"message": "User not found!"}), 404
+
+@app.route('/api/updatepassword', methods=['PUT'])
+def update_password():
+    data = request.json
+    user_email = data.get('email')
+    old_password = data.get('oldPassword')
+    new_password = data.get('newPassword')
+
+    user = User.objects(email=user_email).first()
+
+    if not user:
+        return jsonify({"message": "User not found!"}), 404
+
+    if not user.check_password(old_password):
+        return jsonify({"message": "Incorrect old password!"}), 400
+
+    user.set_password(new_password)
+    user.save()
+
+    return jsonify({"message": "Password updated successfully!"}), 200
+
+@app.route('/api/deleteaccount', methods=['DELETE'])
+def delete_account():
+    user_email = request.args.get('email')
+
+    user = User.objects(email=user_email).first()
+
+    if not user:
+        return jsonify({"message": "User not found!"}), 404
+
+    user.delete()
+    return jsonify({"message": "User account deleted successfully!"}), 200
+
+@app.route('/api/sendmessage', methods=['POST'])
+def chatbot():
+    data = request.json
+    message = data.get('message')
+    if message:
+        model = genai.GenerativeModel('models/gemini-pro')
+        result = model.generate_content(message)
+        text = result.text
+        text = re.sub(r'^# (.*?)$', r'<h1>\1</h1>', text, flags=re.MULTILINE)
+        text = re.sub(r'^## (.*?)$', r'<h2>\1</h2>', text, flags=re.MULTILINE)
+        text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', text)
+        text = re.sub(r'^\* (.*?)$', r'<li>\1</li>', text, flags=re.MULTILINE)
+        text = re.sub(r'</li>\s*<li>', r'</li><li>', text)
+        text = re.sub(r'</li>\s*$', r'</li>', text)
+        text = re.sub(r'^(<li>.*?</li>\s*)+$', r'<ul>\1</ul>', text, flags=re.MULTILINE)
+        text = text.replace('\n', '<br>')
+        html_response = text
+        
+        return jsonify({'response': html_response}), 200
+    else:
+        return jsonify({'response': 'No message received!'}), 400
+
+class Task(Document):
+    email = EmailField(required=True)
+    title = StringField(required=True, max_length=100)
+    task_date = DateTimeField(required=True)
+    start_time = StringField(required=True)
+    end_time = StringField(required=True)
+    description = StringField(max_length=500)
+    created_at = DateTimeField(default=datetime.now(timezone.utc))
+
+    meta = {
+        'collection': 'tasks'
+    }
+ 
+@app.route('/api/addTask', methods=['POST'])
+def addTask():
+    data = request.json
+    
+    try:
+        email = data.get('email')
+        title = data.get('task').get('title')
+        task_date = datetime.strptime(data.get('task').get('date'), "%Y-%m-%d")
+        start_time = data.get('task').get('start_time')
+        end_time = data.get('task').get('end_time')
+        description = data.get('task').get('description', '')
+
+        if not email or not title or not task_date or not start_time or not end_time:
+            return jsonify({'status': 'error', 'message': 'Missing required fields'}), 400
+
+        task = Task(
+            email=email,
+            title=title,
+            task_date=task_date,
+            start_time=start_time,
+            end_time=end_time,
+            description=description
+        )
+
+        task.save()
+
+        response = {
+            'status': 'success',
+            'message': 'Task added successfully!',
+            'data': {
+                'email': email,
+                'title': title,
+                'task_date': task_date.strftime("%Y-%m-%d"),
+                'start_time': start_time,
+                'end_time': end_time,
+                'description': description
+            }
+        }
+
+        return jsonify(response), 200
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+    
+@app.route('/api/getTasks', methods=['GET'])
+def get_tasks():
+    email = request.args.get('email')
+    date = request.args.get('date')
+
+    if not email or not date:
+        return jsonify({'status': 'error', 'message': 'Missing required parameters'}), 400
+
+    try:
+        task_date = datetime.strptime(date, "%Y-%m-%d")
+        
+        tasks = Task.objects(email=email, task_date=task_date)
+
+        tasks_data = []
+        for task in tasks:
+            tasks_data.append({
+                'title': task.title,
+                'start_time': task.start_time,
+                'end_time': task.end_time,
+                'description': task.description
+            })
+
+        return jsonify({'status': 'success', 'tasks': tasks_data}), 200
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/api/removeTask', methods=['DELETE'])
+def remove_task():
+    email = request.args.get('email')
+    task_date = request.args.get('task_date')
+    task_index = int(request.args.get('task_index'))
+
+    if not email or not task_date or task_index is None:
+        return jsonify({'status': 'error', 'message': 'Missing required parameters'}), 400
+
+    try:
+        task_date = datetime.strptime(task_date, "%Y-%m-%d")
+
+        tasks = Task.objects(email=email, task_date=task_date).order_by('created_at')
+
+        if not tasks:
+            return jsonify({'status': 'error', 'message': 'No tasks found for this date!'}), 404
+
+        if task_index < 0 or task_index >= len(tasks):
+            return jsonify({'status': 'error', 'message': 'Invalid task index!'}), 400
+
+        task_to_delete = tasks[task_index]
+        task_to_delete.delete()
+
+        return jsonify({'status': 'success', 'message': 'Task removed successfully!'}), 200
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True)
