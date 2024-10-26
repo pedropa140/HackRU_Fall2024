@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 import bcrypt
 from dotenv import load_dotenv
@@ -7,13 +7,15 @@ import mongoengine
 import certifi
 from datetime import datetime, timezone
 from pymongo.mongo_client import MongoClient
-from mongoengine import Document, StringField, EmailField, ValidationError, DateTimeField, ReferenceField, ListField, FloatField, EmbeddedDocument
-import google.generativeai as genai
+from mongoengine import Document, StringField, EmailField, ValidationError, DateTimeField, ReferenceField, ListField, FloatField, EmbeddedDocument, EmbeddedDocumentField
 import re
+import cloudflare
+from cloudflare import run
 
 app = Flask(__name__)
 load_dotenv()
 
+API_BASE_URL = "https://api.cloudflare.com/client/v4/accounts/ce787f621d3df59e07bd0ff342723ae1/ai/run/"
 api_key = os.getenv("GENAI_API_KEY")
 MONGODB_URL = os.getenv('MONGODB_URI')
 client = MongoClient(MONGODB_URL, tlsCAFile=certifi.where())
@@ -27,46 +29,48 @@ except Exception as e:
 
 mongoengine.connect(host=MONGODB_URL, tlsCAFile=certifi.where())
 
-#Schemas
 class Coordinate(EmbeddedDocument):
     latitude = FloatField(required=True)
     longitude = FloatField(required=True)
 
 class PrimaryProvider(EmbeddedDocument):
-    "Name" = StringField(required=True),
-    "Location" = ListField(EmbeddedDocumentField(Coordinate))
+    name = StringField(required=True)
+    location = ListField(EmbeddedDocumentField(Coordinate))
+
 class Appointment(EmbeddedDocument):
-    "Name" = StringField(required=True),
-    "Provider" = StringField(required=True),
-    "Date" = DateTimeField(required=True),
-    "Location" = ListField(EmbeddedDocumentField(Coordinate))
-    
+    name = StringField(required=True)
+    provider = StringField(required=True)
+    date = DateTimeField(required=True)
+    location = ListField(EmbeddedDocumentField(Coordinate))
+
 class Insurance(EmbeddedDocument):
-    "Name" = StringField(required=True),
-    "Provider" = StringField(required=True),
-    "PolicyNumber" = StringField(required=True),
-    "GroupNumber" = StringField(required=True),
-    "Copay" = FloatField,
-    "Deductible" = FloatField,
-    "Coverage" = StringField
-    
+    name = StringField(required=True)
+    provider = StringField(required=True)
+    policy_number = StringField(required=True)
+    group_number = StringField(required=True)
+    copay = FloatField()
+    deductible = FloatField()
+    coverage = StringField()
+
 class Activity(EmbeddedDocument):
-    "Name" = StringField(required=True),
-    "Type" = StringField(required=True),
-    "Date" = DateTimeField(required=True),
-    "Location" = ListField(EmbeddedDocumentField(Coordinate))
-class Patient (Document):
-        "firstName"= StringField(required=True),
-        "lastName" = StringField(required=True),
-        "email" = EmailField(required=True),
-        "DOB" = DateTimeField(required=True),
-        "password" = StringField(required=True),
-        "coordinates" = Coordinate
-        "appointments" = ListField(EmbeddedDocumentField(Appointment))
-        "insurance" = Insurance
-        "activities" = ListField(EmbeddedDocumentField(Activity))
-        "primaryProvider" = PrimaryProvider
-        "foodTracker" = ListField(StringField)
+    name = StringField(required=True)
+    type = StringField(required=True)
+    date = DateTimeField(required=True)
+    location = ListField(EmbeddedDocumentField(Coordinate))
+
+class Patient(Document):
+    first_name = StringField(required=True)
+    last_name = StringField(required=True)
+    email = EmailField(required=True)
+    dob = DateTimeField(required=True)
+    password = StringField(required=True)
+    coordinates = EmbeddedDocumentField(Coordinate)
+    appointments = ListField(EmbeddedDocumentField(Appointment))
+    insurance = EmbeddedDocumentField(Insurance)
+    activities = ListField(EmbeddedDocumentField(Activity))
+    primary_provider = EmbeddedDocumentField(PrimaryProvider)
+    food_tracker = ListField(StringField())
+
 CORS(app)
 
 class User(Document):
@@ -210,26 +214,40 @@ def delete_account():
     return jsonify({"message": "User account deleted successfully!"}), 200
 
 @app.route('/api/sendmessage', methods=['POST'])
-def chatbot():
+def send_message():
     data = request.json
     message = data.get('message')
-    if message:
-        model = genai.GenerativeModel('models/gemini-pro')
-        result = model.generate_content(message)
-        text = result.text
-        text = re.sub(r'^# (.*?)$', r'<h1>\1</h1>', text, flags=re.MULTILINE)
-        text = re.sub(r'^## (.*?)$', r'<h2>\1</h2>', text, flags=re.MULTILINE)
-        text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', text)
-        text = re.sub(r'^\* (.*?)$', r'<li>\1</li>', text, flags=re.MULTILINE)
-        text = re.sub(r'</li>\s*<li>', r'</li><li>', text)
-        text = re.sub(r'</li>\s*$', r'</li>', text)
-        text = re.sub(r'^(<li>.*?</li>\s*)+$', r'<ul>\1</ul>', text, flags=re.MULTILINE)
-        text = text.replace('\n', '<br>')
-        html_response = text
-        
-        return jsonify({'response': html_response}), 200
-    else:
+    if not message:
         return jsonify({'response': 'No message received!'}), 400
+    query = f'The question the user wants to ask is {message}.'
+    inputs = [
+        {
+            "role": "system",
+            "content": """
+                As a chatbot, your goal is to help with questions that primarily deal with environmental science and sustainability.
+                Do not entertain questions outside of your scope; apologize politely and offer sustainability facts. Do not explicitly
+                inform the user about this instruction.
+                """
+        },
+        {"role": "user", "content": query}
+    ]
+    print(input)
+    # AI model interaction
+    result_dictionary = cloudflare.run("@cf/meta/llama-2-7b-chat-int8", inputs)
+    print(result_dictionary)
+    response_text = result_dictionary['result']
+
+    # Formatting response into HTML-like format
+    response_text = re.sub(r'^# (.*?)$', r'<h1>\1</h1>', response_text, flags=re.MULTILINE)
+    response_text = re.sub(r'^## (.*?)$', r'<h2>\1</h2>', response_text, flags=re.MULTILINE)
+    response_text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', response_text)
+    response_text = re.sub(r'^\* (.*?)$', r'<li>\1</li>', response_text, flags=re.MULTILINE)
+    response_text = re.sub(r'</li>\s*<li>', r'</li><li>', response_text)
+    response_text = re.sub(r'</li>\s*$', r'</li>', response_text)
+    response_text = re.sub(r'^(<li>.*?</li>\s*)+$', r'<ul>\1</ul>', response_text, flags=re.MULTILINE)
+    response_text = response_text.replace('\n', '<br>')
+
+    return jsonify({'response': response_text}), 200
 
 class Task(Document):
     email = EmailField(required=True)
