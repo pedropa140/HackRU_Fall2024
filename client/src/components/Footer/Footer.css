@@ -43,7 +43,7 @@ section.dark-mode .newsletter .newsletter_form input {
 
 .newsletter .newsletter_form button {
     padding: 10px 20px;
-    background-color: #66cfff;
+    background-color: #62929E;
     color: white;
     border: none;
     border-radius: 5px;
@@ -83,11 +83,11 @@ section.dark-mode .footer {
 }
 
 .footer .footer_links a:hover {
-    color: #66cfff;
+    color: #62929E;
 }
 
 section.dark-mode .footer .footer_links a:hover {
-    color: #66cfff;
+    color: #62929E;
 }
 
 .footer p {

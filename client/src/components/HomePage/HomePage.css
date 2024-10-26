@@ -118,7 +118,7 @@
 .HomePage_features .feature_item h3 {
     font-size: 22px;
     margin-bottom: 15px;
-    color: #66cfff;
+    color: #62929E;
 }
 
 .HomePage_features .feature_item p {
@@ -127,7 +127,7 @@
 }
 
 #HomePage.dark-mode .HomePage_features .feature_item h3 {
-    color: #66cfff;
+    color: #62929E;
 }
 
 #HomePage.dark-mode .HomePage_features .feature_item p {
@@ -135,7 +135,7 @@
 }
 
 .HomePage_testimonials {
-    background-color: #66cfff;
+    background-color: #62929E;
     color: white;
     padding: 60px 20px;
     text-align: center;
@@ -227,7 +227,7 @@
 .HomePage_features_in_depth {
     text-align: center;
     padding: 60px 20px;
-    background-color: #66cfff;
+    background-color: #62929E;
     color: white;
 }
 

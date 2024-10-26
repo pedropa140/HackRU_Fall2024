@@ -12,7 +12,7 @@
 
 .spinner {
     border: 8px solid rgba(0, 0, 0, 0.1);
-    border-left-color: #66cfff;
+    border-left-color: #62929E;
     border-radius: 50%;
     width: 80px;
     height: 80px;
@@ -38,7 +38,7 @@
 
 .dark-mode .spinner {
     border: 8px solid rgba(255, 255, 255, 0.1);
-    border-left-color: #66cfff;
+    border-left-color: #62929E;
 }
 
 .dark-mode #Loading p {
