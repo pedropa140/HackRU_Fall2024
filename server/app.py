@@ -67,7 +67,7 @@ class Patient (Document):
     insurance = Insurance(required=True)
     activities = ListField(EmbeddedDocumentField(Activity))
     primaryProvider = PrimaryProvider
-    foodTracker = ListField(StringField)
+    foodTracker = ListField(StringField())
 CORS(app)
 
 
@@ -215,11 +215,11 @@ def send_message():
         },
         {"role": "user", "content": query}
     ]
-    print(input)
+    # print(input)
     # AI model interaction
     result_dictionary = cloudflare.run("@cf/meta/llama-2-7b-chat-int8", inputs)
     print(result_dictionary)
-    response_text = result_dictionary['result']
+    response_text = result_dictionary['result']['response']
 
     # Formatting response into HTML-like format
     response_text = re.sub(r'^# (.*?)$', r'<h1>\1</h1>', response_text, flags=re.MULTILINE)
