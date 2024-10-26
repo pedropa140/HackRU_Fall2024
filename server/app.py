@@ -7,7 +7,7 @@ import mongoengine
 import certifi
 from datetime import datetime, timezone
 from pymongo.mongo_client import MongoClient
-from mongoengine import Document, StringField, EmailField, ValidationError, DateTimeField, ReferenceField, ListField
+from mongoengine import Document, StringField, EmailField, ValidationError, DateTimeField, ReferenceField, ListField, FloatField, EmbeddedDocument
 import google.generativeai as genai
 import re
 
@@ -28,15 +28,45 @@ except Exception as e:
 mongoengine.connect(host=MONGODB_URL, tlsCAFile=certifi.where())
 
 #Schemas
-class Patient (Document):
-    {
-        "firstName": StringField(required=True),
-        "lastName": StringField(required=True),
-        "email": EmailField(required=True),
-        "DOB": DateTimeField(required=True),
-        "password": StringField(required=True),
-    }
+class Coordinate(EmbeddedDocument):
+    latitude = FloatField(required=True)
+    longitude = FloatField(required=True)
 
+class PrimaryProvider(EmbeddedDocument):
+    "Name" = StringField(required=True),
+    "Location" = ListField(EmbeddedDocumentField(Coordinate))
+class Appointment(EmbeddedDocument):
+    "Name" = StringField(required=True),
+    "Provider" = StringField(required=True),
+    "Date" = DateTimeField(required=True),
+    "Location" = ListField(EmbeddedDocumentField(Coordinate))
+    
+class Insurance(EmbeddedDocument):
+    "Name" = StringField(required=True),
+    "Provider" = StringField(required=True),
+    "PolicyNumber" = StringField(required=True),
+    "GroupNumber" = StringField(required=True),
+    "Copay" = FloatField,
+    "Deductible" = FloatField,
+    "Coverage" = StringField
+    
+class Activity(EmbeddedDocument):
+    "Name" = StringField(required=True),
+    "Type" = StringField(required=True),
+    "Date" = DateTimeField(required=True),
+    "Location" = ListField(EmbeddedDocumentField(Coordinate))
+class Patient (Document):
+        "firstName"= StringField(required=True),
+        "lastName" = StringField(required=True),
+        "email" = EmailField(required=True),
+        "DOB" = DateTimeField(required=True),
+        "password" = StringField(required=True),
+        "coordinates" = Coordinate
+        "appointments" = ListField(EmbeddedDocumentField(Appointment))
+        "insurance" = Insurance
+        "activities" = ListField(EmbeddedDocumentField(Activity))
+        "primaryProvider" = PrimaryProvider
+        "foodTracker" = ListField(StringField)
 CORS(app)
 
 class User(Document):
