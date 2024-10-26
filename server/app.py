@@ -44,7 +44,6 @@ class Appointment(EmbeddedDocument):
 
 class Insurance(EmbeddedDocument):
     name = StringField(required=True)
-    provider = StringField(required=True)
     policy_number = StringField(required=True)
     group_number = StringField(required=True)
     copay = FloatField()
@@ -74,8 +73,41 @@ CORS(app)
 
 @app.route('/api/patientSignup')
 def patientSignup():
-    
-
+    form_data = request.json
+    firstname = form_data['firstname']
+    lastname = form_data['lastname']
+    email = form_data['email']
+    password = form_data['password']
+    dob = form_data['dob']
+    insurancename = form_data['insurancename']
+    policy_number = form_data['policy_number']    
+    group_number = form_data['group_number']
+    deductible = None
+    copay = None
+    coverage = None
+    if form_data['copay'] not in None and form_data['copay'] != "":
+        copay = form_data['copay']
+    if form_data['deductible'] not in None and form_data['deductible'] != "":
+        deductible = form_data['deductible']
+    if form_data['coverage'] not in None and form_data['coverage'] != "":
+        coverage = form_data['coverage']
+    insurance = Insurance(
+        name = insurancename,
+        policy_number = policy_number,
+        group_number = group_number,
+        deductible = deductible,
+        copay = copay,
+        coverage = coverage
+    )
+    patient = Patient(
+        firstname = firstname,
+        lastname = lastname,
+        email = email,
+        DOB =  dob,
+        password = password,
+        insurance = insurance
+    )
+    patient.save()
 @app.route('/api/signup', methods=['POST'])
 def signup():
     form_data = request.json
