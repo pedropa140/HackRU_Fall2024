@@ -1,0 +1,67 @@
+.notification-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .notification-modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+    position: relative;
+  }
+  
+  .dark-mode.notification-modal-content {
+    background-color: #333;
+    color: white;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .notification-title {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .success {
+    color: #66cfff;
+  }
+  
+  .failure {
+    color: #66cfff;
+  }
+  
+  .notification-message {
+    margin: 15px 0;
+  }
+  
+  .ok-button {
+    background-color: #0073a1;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .ok-button:hover {
+    background-color: #66cfff;
+  }
+  
