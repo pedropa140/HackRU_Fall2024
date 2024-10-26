@@ -1,0 +1,215 @@
+.settings-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.settings-modal {
+    background-color: #fff;
+    color: #333;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    opacity: 0;
+    animation: fadeInModal 0.5s forwards;
+}
+
+.settings-modal.dark-mode {
+    background-color: #333;
+    color: #ecf0f1;
+}
+
+.settings-modal select {
+    background-color: transparent;
+    color: black;
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    border: 0px solid transparent;
+}
+
+.settings-modal select:hover {
+    background-color: #eee;
+}
+
+.settings-modal.dark-mode select:hover {
+    background-color: #444;
+}
+
+.settings-modal.dark-mode select {
+    color: white;
+    border: 0px solid transparent;
+}
+
+.settings-modal select:focus {
+    border-color: transparent;
+    outline: none;
+    border: 0px solid transparent;
+}
+
+.settings-modal.dark-mode select option {
+    background-color: #333;
+    color: white;
+}
+
+.settings-modal select option {
+    background-color: white;
+    color: black;
+}
+
+.settings-modal h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.dark-mode .settings-modal h2 {
+    color: white;
+}
+
+.settings-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.settings-option:last-child {
+    border-bottom: none;
+}
+
+.settings-option label {
+    font-size: 1rem;
+    font-weight: bolder;
+}
+
+.delete-account-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    font-weight: bolder;
+}
+
+.delete-account-btn:hover {
+    background-color: #c0392b;
+    color: white;
+}
+
+.confirm-delete {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid #e74c3c;
+    background-color: #fff2f2;
+    border-radius: 4px;
+    font-weight: bolder;
+}
+
+.confirm-delete.dark-mode {
+    background-color: rgba(231, 76, 60, 0.1);
+    border-color: #e74c3c;
+}
+
+.confirm-delete p {
+    margin: 0.5rem 0;
+    color: #e74c3c;
+}
+
+.confirm-delete-btn,
+.cancel-delete-btn {
+    margin: 0.5rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    font-weight: bolder;
+}
+
+.confirm-delete-btn {
+    background-color: #e74c3c;
+    color: white;
+    font-weight: bolder;
+}
+
+.cancel-delete-btn {
+    background-color: #95a5a6;
+    color: white;
+    font-weight: bolder;
+}
+
+.confirm-delete-btn:hover {
+    background-color: #c0392b;
+    color: white;
+}
+
+.cancel-delete-btn:hover {
+    background-color: #7f8c8d;
+    color: white;
+}
+
+.close-modal-btn {
+    background-color: #3498db;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 1rem;
+    float: right;
+    transition: background-color 0.3s;
+    font-weight: bolder;
+}
+
+.close-modal-btn:hover {
+    background-color: #2980b9;
+    color: white;
+}
+
+.close-modal-btn.dark-mode {
+    background-color: #1abc9c;
+    color: white;
+}
+
+.close-modal-btn.dark-mode:hover {
+    background-color: #16a085;
+    color: white;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInModal {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
