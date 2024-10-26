@@ -18,7 +18,6 @@ api_key = os.getenv("GENAI_API_KEY")
 MONGODB_URL = os.getenv('MONGODB_URI')
 client = MongoClient(MONGODB_URL, tlsCAFile=certifi.where())
 
-genai.configure(api_key=api_key)
 
 try:
     client.admin.command('ping')
@@ -27,6 +26,16 @@ except Exception as e:
     print(e)
 
 mongoengine.connect(host=MONGODB_URL, tlsCAFile=certifi.where())
+
+#Schemas
+class Patient (Document):
+    {
+        "firstName": StringField(required=True),
+        "lastName": StringField(required=True),
+        "email": EmailField(required=True),
+        "DOB": DateTimeField(required=True),
+        "password": StringField(required=True),
+    }
 
 CORS(app)
 
