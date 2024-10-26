@@ -66,7 +66,7 @@ class Patient (Document):
     appointments = ListField(EmbeddedDocumentField(Appointment))
     insurance = Insurance(required=True)
     activities = ListField(EmbeddedDocumentField(Activity))
-    primaryProvider = PrimaryProvider(required=True)
+    primaryProvider = PrimaryProvider
     foodTracker = ListField(StringField)
 CORS(app)
 
