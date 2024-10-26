@@ -1,0 +1,206 @@
+#AboutPage {
+    width: 100vw;
+    height: auto;
+    background-color: #f3f3f3;
+    transition: background-color 0.3s ease;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+#AboutPage.dark-mode {
+    background-color: #121212;
+    color: #f0f0f0;
+}
+
+#AboutPage.dark-mode .NavBar {
+    background-color: #333;
+}
+
+.AboutPage_hero {
+    text-align: center;
+    padding-top: 130px;
+    padding-bottom: 90px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #66cfff;
+    color: white;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-bottom: 5px solid #004f7a;
+}
+
+#AboutPage.dark-mode .AboutPage_hero {
+    background-color: #333;
+    color: #ffffff;
+}
+
+.AboutPage_hero .hero_title {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.AboutPage_hero .hero_subtitle {
+    font-size: 24px;
+    font-style: italic;
+    margin-bottom: 30px;
+}
+
+.AboutPage_content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.content_title {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #66cfff;
+    border-bottom: 2px solid #66cfff;
+    padding-bottom: 10px;
+}
+
+#AboutPage.dark-mode .content_title {
+    color: #66cfff;
+    border-bottom-color: #66cfff;
+}
+
+.content_text {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+#AboutPage.dark-mode .content_text {
+    color: #e0e0e0;
+}
+
+.values_list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.value_item {
+    background-color: #e7f5ff;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#AboutPage.dark-mode .value_item {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+}
+
+.value_item:hover {
+    background-color: #cfe2ff;
+}
+
+#AboutPage.dark-mode .value_item:hover {
+    background-color: #333;
+}
+
+.team {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.team-member {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    width: 100%;
+    border: 2px solid #66cfff;
+}
+
+#AboutPage.dark-mode .team-member {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+}
+
+.team-member_img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+    border: 3px solid #66cfff;
+}
+
+.team-member_name {
+    font-size: 22px;
+    color: #004f7a;
+    margin-bottom: 5px;
+}
+
+#AboutPage.dark-mode .team-member_name {
+    color: #66cfff;
+}
+
+.team-member_role {
+    font-size: 16px;
+    color: #666;
+}
+
+#AboutPage.dark-mode .team-member_role {
+    color: #bbbbbb;
+}
+
+.team-member_description {
+    font-size: 14px;
+    color: #333;
+    margin-top: 10px; 
+}
+
+#AboutPage.dark-mode .team-member_description {
+    color: #e0e0e0;
+}
+
+.contact-button {
+    background-color: #66cfff;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+#AboutPage.dark-mode .contact-button {
+    background-color: #66cfff;
+}
+
+.contact-button:hover {
+    background-color: #0073a1;
+    color: white;
+}
+
+#AboutPage.dark-mode .contact-button:hover {
+    background-color: #0073a1;
+}
+
+.contact_email {
+    color: #007bff;
+    text-decoration: underline;
+}
+
+#AboutPage.dark-mode .contact_email {
+    color: #66cfff;
+}
+
+.contact_email:hover {
+    color: #0056b3;
+}
+
+#AboutPage.dark-mode .contact_email:hover {
+    color: #66cfff;
+}
