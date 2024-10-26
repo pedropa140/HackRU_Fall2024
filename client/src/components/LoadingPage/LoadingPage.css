@@ -1,0 +1,46 @@
+#Loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.dark-mode #Loading .NavBar {
+    background-color: #333;
+}
+
+.spinner {
+    border: 8px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #66cfff;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#Loading p {
+    font-size: 1.5rem;
+    color: #333;
+    font-weight: bold;
+}
+
+.dark-mode #Loading {
+    background-color: #333;
+}
+
+.dark-mode .spinner {
+    border: 8px solid rgba(255, 255, 255, 0.1);
+    border-left-color: #66cfff;
+}
+
+.dark-mode #Loading p {
+    color: #f1f1f1;
+}

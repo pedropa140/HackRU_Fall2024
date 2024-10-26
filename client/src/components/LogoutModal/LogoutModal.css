@@ -1,0 +1,106 @@
+.logout-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7); /* Darker overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.logout-modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    color: black;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-20px);
+    animation: slideIn 0.3s ease-out forwards;
+    opacity: 0;
+}
+
+.logout-modal-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.logout-modal-actions button {
+    padding: 12px 24px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.logout-modal-actions button:hover {
+    transform: translateY(-3px);
+}
+
+.logout-confirm-logout {
+    background-color: #66cfff;
+    color: white;
+}
+
+.logout-confirm-logout:hover {
+    background-color: #56b5e0;
+}
+
+.logout-modal-actions button.cancel-btn {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.logout-modal-actions button.cancel-btn:hover {
+    background-color: #c2c2c2;
+}
+
+.logout-modal-content.dark-mode {
+    background-color: #2c2c2c;
+    color: #f1f1f1;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.logout-modal-actions button.dark-mode {
+    background-color: #555;
+    color: #f1f1f1;
+}
+
+.logout-modal-actions button.logout-confirm-logout.dark-mode {
+    background-color: #0073a1;
+}
+
+.logout-modal-actions button.logout-confirm-logout.dark-mode:hover {
+    background-color: #005f81;
+}
+
+.logout-modal-actions button.cancel-btn.dark-mode {
+    background-color: #444;
+}
+
+.logout-modal-actions button.cancel-btn.dark-mode:hover {
+    background-color: #666;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
