@@ -52,8 +52,8 @@ const HomePage = ({ toggleDarkMode, isDarkMode }) => {
       <SignUpModal isOpen={isSignUpModalOpen} onClose={toggleSignUpModal} isDarkMode={isDarkMode} />
 
       <div className='HomePage_hero'>
-        <h1 className='hero_title'>Welcome to Our Platform</h1>
-        <p className='hero_subtitle'>Connecting people and ideas for a brighter future.</p>
+        <h1 className='hero_title'>Welcome to Memory+</h1>
+        <p className='hero_subtitle'>MemoryCare is an on-demand service that ensures dementia patients receive safe transportation to appointments, companionship, and meal assistance, ideal for those living alone or with distant family members.</p>
         {!isUserSignedIn ? (
           <button className='hero_button' onClick={toggleSignUpModal}>Get Started</button>
         ) : (
