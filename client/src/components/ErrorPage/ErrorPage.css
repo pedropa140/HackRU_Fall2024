@@ -1,0 +1,52 @@
+#Error {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    padding: 20px;
+    background-color: white;
+}
+
+#Error h1 {
+    font-size: 2.5rem;
+    color: #d32f2f;
+}
+
+#Error p {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.retry-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.retry-button:hover {
+    background-color: #388e3c;
+}
+
+.dark-mode #Error {
+    background-color: #333;
+}
+
+.dark-mode #Error .NavBar{
+    background-color: #333;
+}
+
+.dark-mode #Error h1 {
+    color: #ff5252;
+}
+
+.dark-mode #Error p {
+    color: #f1f1f1;
+}
