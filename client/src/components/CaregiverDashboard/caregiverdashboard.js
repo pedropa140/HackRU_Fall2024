@@ -22,7 +22,48 @@ const CaregiverDashboardPage = ({ toggleDarkMode, isDarkMode }) => {
 
     const userEmail = sessionStorage.getItem('userEmail');
     const [userInfo, setUserInfo] = useState(null);
-    const [patients, setPatients] = useState([]);
+    const [patients, setPatients] = useState([
+        {
+            _id: '1',
+            firstname: 'John',
+            lastname: 'Doe',
+            email: 'john.doe@example.com',
+            DOB: '1985-03-15',
+            insurance: 'Blue Cross Blue Shield'
+        },
+        {
+            _id: '2',
+            firstname: 'Jane',
+            lastname: 'Smith',
+            email: 'jane.smith@example.com',
+            DOB: '1992-07-22',
+            insurance: 'Aetna'
+        },
+        {
+            _id: '3',
+            firstname: 'Robert',
+            lastname: 'Johnson',
+            email: 'robert.j@example.com',
+            DOB: '1978-11-30',
+            insurance: 'UnitedHealthcare'
+        },
+        {
+            _id: '4',
+            firstname: 'Maria',
+            lastname: 'Garcia',
+            email: 'maria.g@example.com',
+            DOB: '1990-05-18',
+            insurance: 'Cigna'
+        },
+        {
+            _id: '5',
+            firstname: 'David',
+            lastname: 'Williams',
+            email: 'david.w@example.com',
+            DOB: '1988-09-25',
+            insurance: 'Medicare'
+        }
+    ]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [formattedTime, setFormattedTime] = useState('');
@@ -39,7 +80,6 @@ const CaregiverDashboardPage = ({ toggleDarkMode, isDarkMode }) => {
                     throw new Error('User not found');
                 }
                 const data = await response.json();
-                console.log(data)
                 setUserInfo(data);
             } catch (err) {
                 setError(err.message);
@@ -51,52 +91,28 @@ const CaregiverDashboardPage = ({ toggleDarkMode, isDarkMode }) => {
         }
     }, [userEmail]);
 
-    const fetchPatients = useCallback(async () => {
-        if (userEmail) {
-            try {
-                const response = await fetch(`/api/getPatients?email=${userEmail}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch patients');
-                }
-                const data = await response.json();
-                setPatients(data.patients);
-            } catch (err) {
-                setError(err.message);
-            }
-        }
-    }, [userEmail]);
-
+    // Simulating adding a patient with fake data
     const addPatient = async (e) => {
         e.preventDefault();
         if (newPatientEmail) {
-            try {
-                const response = await fetch('/api/addPatientToCaregiver', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        caregiver_email: "koolkusum10@gmail.com",
-                        patient_email: newPatientEmail,
-                  
-                    }),
-                });
-                if (!response.ok) {
-                    throw new Error('Failed to add patient');
-                }
-                const data = await response.json();
-                setPatients((prevPatients) => [...prevPatients, newPatientEmail]);
-                setNewPatientEmail('');
-            } catch (err) {
-                setError(err.message);
-            }
+            // Generate fake data for the new patient
+            const newPatient = {
+                _id: `${patients.length + 1}`,
+                firstname: `Patient ${patients.length + 1}`,
+                lastname: 'Test',
+                email: newPatientEmail,
+                DOB: '1995-01-01',
+                insurance: 'Sample Insurance'
+            };
+
+            setPatients(prevPatients => [...prevPatients, newPatient]);
+            setNewPatientEmail('');
         }
     };
 
     useEffect(() => {
         fetchUserInfo();
-        fetchPatients();
-    }, [fetchUserInfo, fetchPatients]);
+    }, [fetchUserInfo]);
 
     useEffect(() => {
         document.title = 'Dashboard';
@@ -112,16 +128,14 @@ const CaregiverDashboardPage = ({ toggleDarkMode, isDarkMode }) => {
 
     useEffect(() => {
         updateFormattedTime();
-
         const intervalId = setInterval(updateFormattedTime, 1000);
-
         return () => clearInterval(intervalId);
     }, []);
 
     const now = new Date();
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
+    
     const dayOfWeek = days[now.getDay()];
     const day = now.getDate();
     const month = months[now.getMonth()];
@@ -163,28 +177,33 @@ const CaregiverDashboardPage = ({ toggleDarkMode, isDarkMode }) => {
             </div>
 
             <div className='DashboardPage_content'>
-                <MapComponent />
-                <h3>Patients you are treating:</h3>
-                <div className="patients-list">
-                    {patients.map((patient, index) => (
-                        <div key={index} className="patient-card">
-                            <h4>{patient.firstname} {patient.lastname}</h4>
-                            <p><strong>Email:</strong> {patient.email}</p>
-                            <p><strong>Date of Birth:</strong> {patient.DOB}</p>
-                            <p><strong>Insurance:</strong> {patient.insurance}</p>
-                        </div>
-                    ))}
+                <div className="patients-section">
+                    <h3>Patients you are treating:</h3>
+                    <div className="patients-list">
+                        {patients.map((patient) => (
+                            <div key={patient._id} className="patient-card">
+                                <h4>{patient.firstname} {patient.lastname}</h4>
+                                <p><strong>Email:</strong> {patient.email}</p>
+                                <p><strong>Date of Birth:</strong> {patient.DOB}</p>
+                                <p><strong>Insurance:</strong> {patient.insurance}</p>
+                            </div>
+                        ))}
+                    </div>
+                    <form onSubmit={addPatient} className="add-patient-form">
+                        <input
+                            type="email"
+                            value={newPatientEmail}
+                            onChange={(e) => setNewPatientEmail(e.target.value)}
+                            placeholder="Enter patient email"
+                            required
+                        />
+                        <button type="submit">Add Patient</button>
+                    </form>
                 </div>
-                <form onSubmit={addPatient} className="add-patient-form">
-                    <input
-                        type="email"
-                        value={newPatientEmail}
-                        onChange={(e) => setNewPatientEmail(e.target.value)}
-                        placeholder="Enter patient email"
-                        required
-                    />
-                    <button type="submit">Add Patient</button>
-                </form>
+                
+                <div className="map-section">
+                    <MapComponent />
+                </div>
             </div>
             <Footer />
         </section>
