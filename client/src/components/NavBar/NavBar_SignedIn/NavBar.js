@@ -84,6 +84,8 @@ const NavBarSignedIn = ({ toggleDarkMode, isDarkMode }) => {
       <ul className="nav-links">
         <li><Link to="/dashboard" onClick={handleTitleClick}>Dashboard</Link></li>
         <li><Link to="/calendar" onClick={handleTitleClick}>Calendar</Link></li>
+        <li><Link to="/food" onClick={handleTitleClick}>Food</Link></li>
+
         <li><Link to="/chatbot" onClick={handleTitleClick}>Chatbot</Link></li>
         <li><Link to="/about" onClick={handleTitleClick}>About Us</Link></li>
         <li className="user-info-dropdown">

@@ -1,0 +1,355 @@
+#FoodPage {
+    width: 100vw;
+    height: auto;
+    background-color: #f3f3f3;
+    transition: background-color 0.3s ease;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+#FoodPage.dark-mode {
+    background-color: #333;
+    color: #ccc;
+}
+
+.FoodPage_hero {
+    text-align: center;
+    padding-top: 130px;
+    padding-bottom: 90px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #62929E;
+    color: white;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-bottom: 5px solid #004f7a;
+    position: relative;
+}
+
+#FoodPage.dark-mode .FoodPage_hero {
+    background-color: #333;
+    color: #ffffff;
+}
+
+.FoodPage_hero .hero_title {
+    font-size: 60px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.FoodPage_hero .hero_subtitle {
+    font-size: 24px;
+    font-style: italic;
+    margin-bottom: 30px;
+}
+
+.FoodPage_content {
+    width: 100vw;
+    min-height: 100vh;
+    background-color: white;
+    padding: 24px;
+}
+
+.dark-mode .FoodPage_content {
+    background-color: #2c3e50;
+}
+
+.meals-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 24px;
+    padding: 20px;
+}
+
+@media (min-width: 768px) {
+    .meals-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .meals-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.meal-card {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .meal-card {
+    background-color: #333;
+    color: #fff;
+}
+
+.mode-toggle {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.mode-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.add-meal-button {
+    background-color: white;
+    color: #62929E;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 0.3s ease;
+}
+
+.add-meal-button:hover {
+    opacity: 0.9;
+}
+
+.meal-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.meal-items {
+    list-style-type: none;
+    padding: 0;
+}
+
+.meal-items li {
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.dark-mode .meal-items li {
+    color: #ccc;
+}
+
+.calories-text {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #eee;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.3s ease;
+}
+
+.add-meal-card {
+    border: 2px dashed #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.add-meal-card:hover {
+    border-color: #62929E;
+}
+
+.dark-mode .add-meal-card {
+    border-color: #666;
+}
+
+.dark-mode .add-meal-card:hover {
+    border-color: #62929E;
+}
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 32px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.dark-mode .modal-content {
+    background-color: #333;
+    color: white;
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #666;
+}
+
+.dark-mode .modal-close {
+    color: #ccc;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.dark-mode .form-group input,
+.dark-mode .form-group select {
+    background-color: #444;
+    border-color: #666;
+    color: white;
+}
+
+.food-item-input {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.remove-item {
+    background: none;
+    border: none;
+    color: #ff4444;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.add-item-button {
+    background-color: #62929E;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.submit-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+}
+
+.submit-button:hover {
+    background-color: #45a049;
+}
+
+.dark-mode .add-item-button,
+.dark-mode .submit-button {
+    opacity: 0.9;
+}
+
+.dark-mode .add-item-button:hover,
+.dark-mode .submit-button:hover {
+    opacity: 1;
+}
+
+/* Delete button styles */
+.meal-card-with-delete {
+    position: relative;
+}
+
+.delete-meal-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 2;
+}
+
+.meal-card-with-delete:hover .delete-meal-button {
+    opacity: 1;
+}
+
+.delete-meal-button:hover {
+    background-color: #ff0000;
+}
+
+.dark-mode .delete-meal-button {
+    background-color: #662222;
+}
+
+.dark-mode .delete-meal-button:hover {
+    background-color: #993333;
+}
+
+/* Optional: Add a subtle hover effect to the entire card */
+.meal-card-with-delete {
+    transition: transform 0.2s ease;
+}
+
+.meal-card-with-delete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

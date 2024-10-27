@@ -85,6 +85,7 @@ class Caregiver(Document):
     email = EmailField(required=True)
     password = StringField(required=True)
     coordinates = EmbeddedDocumentField(Coordinate)
+    patients = ListField(EmailField())
 
 @app.route("/api/caregiverSignup", methods=["POST"])
 def caregiverSignup():
@@ -160,6 +161,31 @@ def patientSignin():
         "message": "Signed in successfully!",
         "email": patient.email,
     }), 200
+
+@app.route('/api/addPatientToCaregiver', methods=['POST'])
+def add_patient_to_caregiver():
+    data = request.json
+    print(f"Received data: {data}")  # Debugging log
+    caregiver_email = data.get('caregiver_email')
+    patient_email = data.get('patient_email')
+
+    if not caregiver_email or not patient_email:
+        print("Missing required parameters")  # Debugging log
+        return jsonify({'status': 'error', 'message': 'Missing required parameters'}), 400
+
+    caregiver = Caregiver.objects(email=caregiver_email).first()
+
+    if not caregiver:
+        print("Caregiver not found")  # Debugging log
+        return jsonify({"message": "Caregiver not found!"}), 404
+
+    if patient_email in caregiver.patients:
+        print("Patient already in the list")  # Debugging log
+        return jsonify({"message": "Patient already in the list!"}), 400
+
+    caregiver.update(push__patients=patient_email)
+    print("Patient added successfully")  # Debugging log
+    return jsonify({"message": "Patient added successfully!"}), 200
 
 # Get Patient Info
 @app.route('/api/userinfo', methods=['GET'])
