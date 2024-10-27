@@ -502,29 +502,32 @@ def get_recommendations():
 
     remaining_calories = daily_goal - total_calories
     
-    # Create a prompt for the AI model
+    # Create a more specific prompt for the AI model
     meal_list = ", ".join(current_meals)
-    query = f"""Based on the user's current meals: {meal_list}, 
+    query = f"""As a nutrition expert, based on these meals: {meal_list}, 
     with {remaining_calories} calories remaining out of a {daily_goal} calorie goal,
-    suggest 3 healthy meal options. For each suggestion, include:
-    1. Name of the meal
-    2. Calorie count
-    3. Basic nutrition info
-    4. Suggested meal type (Breakfast/Lunch/Dinner)
-    Format each suggestion consistently for parsing."""
+    recommend 3 different healthy meal options that would complement the existing meals.
+    Consider variety, nutrition, and balance.
+
+    FORMAT STRICTLY AS FOLLOWS FOR EACH RECOMMENDATION:
+    {{
+        "name": "Full meal name",
+        "calories": exact_number,
+        "nutritionInfo": "Protein: Xg, Carbs: Yg, Fat: Zg",
+        "suggestedMealType": "Breakfast/Lunch/Dinner"
+    }}
+
+    PROVIDE EXACTLY THREE DIFFERENT OPTIONS."""
 
     inputs = [
         {
             "role": "system",
-            "content": """You are a nutrition expert AI that provides healthy meal recommendations.
-            Format each meal suggestion as follows:
-            {
-                "name": "Meal Name",
-                "calories": number,
-                "nutritionInfo": "Protein: Xg, Carbs: Yg, Fat: Zg",
-                "suggestedMealType": "Breakfast/Lunch/Dinner"
-            }
-            Provide exactly 3 suggestions."""
+            "content": """You are a nutrition expert AI. 
+            Provide exactly 3 meal recommendations.
+            Each recommendation must be different.
+            Focus on balanced nutrition and variety.
+            Always format responses as valid JSON objects.
+            Include specific calorie counts and macronutrients."""
         },
         {"role": "user", "content": query}
     ]
@@ -532,62 +535,108 @@ def get_recommendations():
     try:
         # Call Cloudflare AI model
         result = cloudflare.run("@cf/meta/llama-2-7b-chat-int8", inputs)
-        
-        # Parse the response and format it
         response_text = result['result']['response']
         
-        # Extract recommendations from the response
-        import json
+        # Extract recommendations using regex
         import re
-
+        import json
+        
         # Find all JSON-like structures in the response
         json_pattern = r'\{[^{}]*\}'
         matches = re.findall(json_pattern, response_text)
         
         recommendations = []
-        for match in matches[:3]:  # Limit to 3 recommendations
+        seen_names = set()  # To ensure unique recommendations
+        
+        for match in matches:
             try:
                 recommendation = json.loads(match)
-                # Validate the required fields
+                # Validate required fields and data types
                 if all(key in recommendation for key in ['name', 'calories', 'nutritionInfo', 'suggestedMealType']):
-                    recommendations.append(recommendation)
+                    # Ensure proper data types
+                    recommendation['name'] = str(recommendation['name'])
+                    recommendation['calories'] = int(float(str(recommendation['calories']).replace(',', '')))
+                    recommendation['nutritionInfo'] = str(recommendation['nutritionInfo'])
+                    recommendation['suggestedMealType'] = str(recommendation['suggestedMealType'])
+                    
+                    # Only add if it's a unique meal
+                    if recommendation['name'] not in seen_names:
+                        seen_names.add(recommendation['name'])
+                        recommendations.append(recommendation)
             except json.JSONDecodeError:
                 continue
+            except (ValueError, TypeError):
+                continue
 
-        # If user is signed in, store recommendations in their profile
-        if user_email:
-            patient = Patient.objects(email=user_email).first()
-            if patient:
-                # Store last 3 recommendations
-                patient.update(set__foodTracker=recommendations[:3])
+            if len(recommendations) >= 3:
+                break
 
-        return jsonify({'recommendations': recommendations}), 200
-
-    except Exception as e:
-        print(f"Error getting recommendations: {str(e)}")
-        return jsonify({
-            'error': 'Failed to get recommendations',
-            'recommendations': [
+        # If we don't have enough valid recommendations, add fallback options
+        while len(recommendations) < 3:
+            meal_types = ['Breakfast', 'Lunch', 'Dinner']
+            fallback_meals = [
                 {
-                    "name": "Greek Yogurt Parfait",
+                    "name": "Greek Yogurt with Berries and Honey",
                     "calories": 300,
-                    "nutritionInfo": "Protein: 15g, Carbs: 45g, Fat: 8g",
+                    "nutritionInfo": "Protein: 20g, Carbs: 35g, Fat: 8g",
                     "suggestedMealType": "Breakfast"
                 },
                 {
-                    "name": "Grilled Chicken Salad",
-                    "calories": 400,
-                    "nutritionInfo": "Protein: 35g, Carbs: 20g, Fat: 15g",
+                    "name": "Grilled Chicken Quinoa Bowl",
+                    "calories": 450,
+                    "nutritionInfo": "Protein: 35g, Carbs: 45g, Fat: 15g",
                     "suggestedMealType": "Lunch"
                 },
                 {
-                    "name": "Baked Salmon with Quinoa",
-                    "calories": 450,
-                    "nutritionInfo": "Protein: 40g, Carbs: 35g, Fat: 20g",
+                    "name": "Baked Salmon with Roasted Vegetables",
+                    "calories": 500,
+                    "nutritionInfo": "Protein: 40g, Carbs: 30g, Fat: 25g",
                     "suggestedMealType": "Dinner"
                 }
             ]
-        }), 200
+            
+            for meal in fallback_meals:
+                if meal['name'] not in seen_names and len(recommendations) < 3:
+                    seen_names.add(meal['name'])
+                    recommendations.append(meal)
+
+        # Store recommendations in user's profile if signed in
+        if user_email:
+            try:
+                patient = Patient.objects(email=user_email).first()
+                if patient:
+                    # Convert recommendations to proper format for storage
+                    stored_recs = [str(rec) for rec in recommendations[:3]]
+                    patient.update(set__foodTracker=stored_recs)
+            except Exception as e:
+                print(f"Error storing recommendations: {str(e)}")
+
+        return jsonify({'recommendations': recommendations[:3]}), 200
+
+    except Exception as e:
+        print(f"Error in recommendation system: {str(e)}")
+        # Return fallback recommendations
+        fallback_recommendations = [
+            {
+                "name": "Greek Yogurt Parfait",
+                "calories": 300,
+                "nutritionInfo": "Protein: 20g, Carbs: 35g, Fat: 8g",
+                "suggestedMealType": "Breakfast"
+            },
+            {
+                "name": "Mediterranean Salad",
+                "calories": 400,
+                "nutritionInfo": "Protein: 25g, Carbs: 30g, Fat: 20g",
+                "suggestedMealType": "Lunch"
+            },
+            {
+                "name": "Grilled Fish with Vegetables",
+                "calories": 450,
+                "nutritionInfo": "Protein: 35g, Carbs: 25g, Fat: 22g",
+                "suggestedMealType": "Dinner"
+            }
+        ]
+        return jsonify({'recommendations': fallback_recommendations}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
