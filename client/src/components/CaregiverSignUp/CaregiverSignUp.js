@@ -8,7 +8,7 @@ import Footer from '../Footer/Footer';
 import NotificationModal from '../NotificationModal/NotificationModal';
 import { useNavigate } from 'react-router-dom';
 
-const SignUpPage = ({ toggleDarkMode, isDarkMode }) => {
+const CaregiverSignUpPage = ({ toggleDarkMode, isDarkMode }) => {
     const navigate = useNavigate();
     const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
     const [isAgreed, setIsAgreed] = useState(false);
@@ -137,4 +137,4 @@ const SignUpPage = ({ toggleDarkMode, isDarkMode }) => {
     );
 }
 
-export default SignUpPage;
+export default CaregiverSignUpPage;

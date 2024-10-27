@@ -1,5 +1,4 @@
-import bcrypt
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, render_template_string
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
@@ -11,6 +10,8 @@ from mongoengine import Document, StringField, EmailField, ValidationError, Date
 import re
 import cloudflare
 from cloudflare import run, generatingActivity
+#from geopy.geocoders import Nominatim
+
 
 app = Flask(__name__)
 load_dotenv()
@@ -34,6 +35,7 @@ except Exception as e:
     print(e)
 
 mongoengine.connect(host=MONGODB_URL, tlsCAFile=certifi.where())
+CORS(app)
 
 # MongoDB Models
 class Coordinate(EmbeddedDocument):
@@ -200,26 +202,7 @@ def update_user_info():
     else:
         return jsonify({"message": "Patient not found!"}), 404
 
-# Update Patient Password
-@app.route('/api/updatepassword', methods=['PUT'])
-def update_password():
-    data = request.json
-    user_email = data.get('email')
-    old_password = data.get('oldPassword')
-    new_password = data.get('newPassword')
 
-    patient = Patient.objects(email=user_email).first()
-
-    if not patient:
-        return jsonify({"message": "Patient not found!"}), 404
-
-    if not bcrypt.checkpw(old_password.encode('utf-8'), patient.password.encode('utf-8')):
-        return jsonify({"message": "Incorrect old password!"}), 400
-
-    # Update to new hashed password
-    hashed_new_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
-    patient.update(set__password=hashed_new_password.decode('utf-8'))
-    return jsonify({"message": "Password updated successfully!"}), 200
 
 # Delete Patient Account
 @app.route('/api/deleteaccount', methods=['DELETE'])
@@ -269,6 +252,69 @@ def send_message():
     response_text = response_text.replace('\n', '<br>')
 
     return jsonify({'response': response_text}), 200
+
+@app.route('/api/addFood', methods=['POST'])
+def add_food():
+    data = request.json
+    user_email = data.get('email')
+    food_item = data.get('food')
+
+    if not user_email or not food_item:
+        return jsonify({'status': 'error', 'message': 'Missing required parameters'}), 400
+
+    patient = Patient.objects(email=user_email).first()
+
+    if not patient:
+        return jsonify({"message": "Patient not found!"}), 404
+
+    patient.update(push__foodTracker=food_item)
+    return jsonify({"message": "Food item added successfully!"}), 200
+
+@app.route('/api/geolocate', methods=['GET'])
+def geolocate():
+    address = request.args.get('address')
+    if not address:
+        return jsonify({'error': 'Address parameter is required'}), 400
+
+    geolocator = Nominatim(user_agent="geoapiExercises")
+    location = geolocator.geocode(address)
+
+    if not location:
+        return jsonify({'error': 'Location not found'}), 404
+
+    latitude = location.latitude
+    longitude = location.longitude
+    map_html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Map</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+        <style>
+            #map {{
+                height: 600px;
+                width: 100%;
+            }}
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        <script>
+            var map = L.map('map').setView([{latitude}, {longitude}], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {{
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }}).addTo(map);
+            L.marker([{latitude}, {longitude}]).addTo(map)
+                .bindPopup('Location: {address}')
+                .openPopup();
+        </script>
+    </body>
+    </html>
+    """
+    return render_template_string(map_html)
 
 class Task(Document):
     email = EmailField(required=True)

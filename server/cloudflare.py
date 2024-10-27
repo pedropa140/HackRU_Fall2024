@@ -24,7 +24,7 @@ def generatingActivity(model):
                 "content": (
                     "Generate a list of 3 activities someone with Alzheimer's/dementia could do to improve their memory. "
                     "Provide it in the format of a list of JSONs, with the JSON format being "
-                    "{'name': 'example', 'datetime': 'YY-MM-DDTHH:MM:SS:00'}. "
+                    "{'name': 'example', 'datetime': 'YY-MM-DDTHH:MM:SS:00'}. With the date being the current date of October 27th"
                     "Please just give the object, without anything before or after."
                 )
             },
