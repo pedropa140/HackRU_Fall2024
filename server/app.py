@@ -217,7 +217,7 @@ def delete_account():
 
 @app.route('api/generateActivities', methods=['POST'])
 def generateActivities():
-    result_dictionary = cloudflare.run("@cf/meta/llama-2-7b-chat-int8")
+    result_dictionary = cloudflare.generatingActivity("@cf/meta/llama-2-7b-chat-int8")
     print(result_dictionary)
     response_text = result_dictionary['result']['response']
 
