@@ -16,6 +16,7 @@ import GenerateTasks from './components/GenerateTasks/GenerateTasks';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import PublicRoute from './components/PublicRoute/PublicRoute';
 import CaregiverSignUpPage from './components/CaregiverSignUp/CaregiverSignUp';
+import CaregiverDashboardPage from './components/CaregiverDashboard/caregiverdashboard';
 
 import './App.css';
 
@@ -61,6 +62,14 @@ const App = () => {
                         element={
                             <PublicRoute>
                                 <CaregiverSignUpPage toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
+                            </PublicRoute>
+                        }
+                    />
+                    <Route
+                        path="/caregiverdashboard"
+                        element={
+                            <PublicRoute>
+                                <CaregiverDashboardPage toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
                             </PublicRoute>
                         }
                     />

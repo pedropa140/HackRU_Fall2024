@@ -1,0 +1,57 @@
+#DashboardPage {
+    width: 100vw;
+    height: auto;
+    background-color: #f3f3f3;
+    transition: background-color 0.3s ease;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+#DashboardPage.dark-mode {
+    background-color: #333;
+    color: #ccc;
+}
+
+.dark-mode #DashboardPage .NavBar {
+    background-color: #333;
+}
+
+.DashboardPage_hero {
+    text-align: center;
+    padding-top: 130px;
+    padding-bottom: 90px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #62929E;
+    color: white;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-bottom: 5px solid #004f7a;
+}
+
+#DashboardPage.dark-mode .DashboardPage_hero {
+    background-color: #333;
+    color: #ffffff;
+}
+
+.DashboardPage_hero .hero_title {
+    font-size: 60px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.DashboardPage_hero .hero_subtitle {
+    font-size: 24px;
+    font-style: italic;
+    margin-bottom: 30px;
+}
+
+.DashboardPage_content {
+    width: 100vw;
+    min-height: 100vh;
+    background-color: white;
+}
+
+.dark-mode .DashboardPage_content {
+    background-color: #2c3e50;
+}
