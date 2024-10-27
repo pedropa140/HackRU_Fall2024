@@ -78,6 +78,7 @@ const CaregiverDashboardPage = ({ toggleDarkMode, isDarkMode }) => {
                     body: JSON.stringify({
                         caregiver_email: "koolkusum10@gmail.com",
                         patient_email: newPatientEmail,
+                  
                     }),
                 });
                 if (!response.ok) {
@@ -164,12 +165,17 @@ const CaregiverDashboardPage = ({ toggleDarkMode, isDarkMode }) => {
             <div className='DashboardPage_content'>
                 <MapComponent />
                 <h3>Patients you are treating:</h3>
-                <ul>
-                    {patients.map((patientEmail, index) => (
-                        <li key={index}>{patientEmail}</li>
+                <div className="patients-list">
+                    {patients.map((patient, index) => (
+                        <div key={index} className="patient-card">
+                            <h4>{patient.firstname} {patient.lastname}</h4>
+                            <p><strong>Email:</strong> {patient.email}</p>
+                            <p><strong>Date of Birth:</strong> {patient.DOB}</p>
+                            <p><strong>Insurance:</strong> {patient.insurance}</p>
+                        </div>
                     ))}
-                </ul>
-                <form onSubmit={addPatient}>
+                </div>
+                <form onSubmit={addPatient} className="add-patient-form">
                     <input
                         type="email"
                         value={newPatientEmail}

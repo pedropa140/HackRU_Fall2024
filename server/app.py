@@ -16,6 +16,30 @@ from cloudflare import run, generatingActivity
 app = Flask(__name__)
 load_dotenv()
 
+@app.route('/api/getPatients', methods=['GET'])
+def get_patients():
+    caregiver_email = request.args.get('email')
+    if not caregiver_email:
+        return jsonify({'status': 'error', 'message': 'Missing required parameters'}), 400
+
+    caregiver = Caregiver.objects(email=caregiver_email).first()
+
+    if not caregiver:
+        return jsonify({"message": "Caregiver not found!"}), 404
+
+    patients_info = []
+    for patient_email in caregiver.patients:
+        patient = Patient.objects(email=patient_email).first()
+        if patient:
+            patients_info.append({
+                "firstname": patient.firstName,
+                "lastname": patient.lastName,
+                "email": patient.email,
+                "DOB": patient.DOB.strftime("%Y-%m-%d"),
+                "insurance": patient.insurance.name
+            })
+
+    return jsonify({"patients": patients_info}), 200
 # Route to provide Mapbox access token to frontend
 @app.route('/api/get_map_config', methods=['GET'])
 def get_map_config():
