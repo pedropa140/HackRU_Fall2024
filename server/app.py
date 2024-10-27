@@ -10,7 +10,7 @@ from pymongo.mongo_client import MongoClient
 from mongoengine import Document, StringField, EmailField, ValidationError, DateTimeField, ListField, FloatField, EmbeddedDocument, EmbeddedDocumentField
 import re
 import cloudflare
-from cloudflare import run
+from cloudflare import run, generatingActivity
 
 app = Flask(__name__)
 load_dotenv()
@@ -80,8 +80,16 @@ def caregiverSignup():
     form_data = request.json
     firstname = form_data['firstname']
     lastname = form_data['lastname']
+    email = form_data['email']
+    password = form_data['password']
+    caregiver = Caregiver(
+        firstName = firstname,
+        lastName = lastname,
+        email = email,
+        password = password
+    )
+    caregiver.save()
     
-
 # Patient Signup with password hashing
 @app.route('/api/PatientSignup', methods=['POST'])
 def patientSignup():
