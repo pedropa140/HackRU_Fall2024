@@ -12,6 +12,7 @@ import AccountDeletedPage from './components/AccountDeletedPage/AccountDeletedPa
 import TermsOfService from './components/TermsOfService/TermsOfService';
 import CalendarPage from './components/CalendarPage/CalendarPage';
 import ChatBotPage from './components/ChatBotPage/ChatBotPage';
+import GenerateTasks from './components/GenerateTasks/GenerateTasks';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import PublicRoute from './components/PublicRoute/PublicRoute';
 import './App.css';
@@ -36,6 +37,7 @@ const App = () => {
                 <Routes>
                     <Route path="/" element={<HomePage toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />} />
                     <Route path="/about" element={<AboutPage toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />} />
+                    <Route path="/generatetasks" element={<GenerateTasks toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />} />
                     <Route
                         path="/signin"
                         element={

@@ -16,14 +16,26 @@ def run(model, inputs):
 
 def generatingActivity(model):
     headers = {"Authorization": CLOUDFLARE_API}
-    input = { 
-        "messages": (
-            "generate a list of  3 activities someone with alziemers/dementia could do to improve their memory. "
-            "Give it in the format of a list of jsons the json format being "
-            '{"name": "example", "datetime": "datetime"}'
-        )
+    
+    input_data = {
+        "messages": [
+            {
+                "role": "system",
+                "content": (
+                    "Generate a list of 3 activities someone with Alzheimer's/dementia could do to improve their memory. "
+                    "Provide it in the format of a list of JSONs, with the JSON format being "
+                    "{'name': 'example', 'datetime': 'YY-MM-DDTHH:MM:SS:00'}. "
+                    "Please just give the object, without anything before or after."
+                )
+            },
+            {
+                "role": "user",
+                "content": "Please generate tasks"
+            }
+        ]
     }
-    response = requests.post(f"{API_BASE_URL}{model}", headers=headers, json=input)
+    
+    response = requests.post(f"{API_BASE_URL}{model}", headers=headers, json=input_data)
     return response.json()
 
-    
+print(generatingActivity("@cf/meta/llama-2-7b-chat-int8"))
