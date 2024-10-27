@@ -7,7 +7,6 @@ const mapContainerStyle = {
   height: '100vh',
 };
 
-// Sample people data with coordinates
 const initialPeople = [
   { name: "Alice", latitude: 40.501548, longitude: -74.447896, status: "Family", phone: "123-456-7890" },
   { name: "Bob", latitude: 40.502248, longitude: -74.448896, status: "Friend", phone: "234-567-8901" },
@@ -16,19 +15,20 @@ const initialPeople = [
 
 const MapComponent = () => {
   const [accessToken, setAccessToken] = useState("");
-  const [location, setLocation] = useState(null); // User's current location
-  const [people, setPeople] = useState(initialPeople); // People data
+  const [location, setLocation] = useState(null);
+  const [people, setPeople] = useState(initialPeople);
   const [viewState, setViewState] = useState({
     latitude: 40.501248,
     longitude: -74.448896,
     zoom: 12,
   });
   const [hoveredPerson, setHoveredPerson] = useState(null);
-  const [selectedPerson, setSelectedPerson] = useState(null); // Person for modal display
-  const [isFormOpen, setIsFormOpen] = useState(false); // Form modal visibility
-  const [newPerson, setNewPerson] = useState({ name: '', status: '', phone: '', latitude: '', longitude: '' }); // New person data
+  const [selectedPerson, setSelectedPerson] = useState(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [newPerson, setNewPerson] = useState({ name: '', status: '', phone: '', latitude: '', longitude: '' });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResult, setSearchResult] = useState(null);
 
-  // Fetch Mapbox access token from Flask backend
   useEffect(() => {
     const fetchMapConfig = async () => {
       try {
@@ -46,7 +46,6 @@ const MapComponent = () => {
     fetchMapConfig();
   }, []);
 
-  // Get user location using Geolocation API
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -66,6 +65,7 @@ const MapComponent = () => {
 
   const handleMarkerClick = (person) => {
     setSelectedPerson(person);
+    setViewState({ ...viewState, latitude: person.latitude, longitude: person.longitude, zoom: 14 });
   };
 
   const closeModal = () => {
@@ -83,8 +83,6 @@ const MapComponent = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-
-    // Add new person to the map
     setPeople((prevPeople) => [
       ...prevPeople,
       {
@@ -95,9 +93,30 @@ const MapComponent = () => {
         longitude: parseFloat(newPerson.longitude),
       },
     ]);
+    setNewPerson({ name: '', status: '', phone: '', latitude: '', longitude: '' });
+    setIsFormOpen(false);
+  };
 
-    setNewPerson({ name: '', status: '', phone: '', latitude: '', longitude: '' }); // Clear form fields
-    setIsFormOpen(false); // Close form modal
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearch = () => {
+    const result = people.find((person) =>
+      person.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    if (result) {
+      setSearchResult(result);
+      setViewState({
+        latitude: result.latitude,
+        longitude: result.longitude,
+        zoom: 14,
+      });
+      setSelectedPerson(result); // Show popup for the searched person
+    } else {
+      setSearchResult(null);
+      setSelectedPerson(null);
+    }
   };
 
   if (!accessToken) return <div>Loading Map...</div>;
@@ -108,6 +127,8 @@ const MapComponent = () => {
       {/* Search Input */}
       <input
         type="text"
+        value={searchQuery}
+        onChange={handleSearchChange}
         placeholder="Search for family or friends..."
         style={{
           position: 'absolute',
@@ -121,6 +142,23 @@ const MapComponent = () => {
           border: '1px solid #ccc',
         }}
       />
+      <button
+        onClick={handleSearch}
+        style={{
+          position: 'absolute',
+          top: '10px',
+          left: 'calc(50% + 160px)',
+          padding: '10px',
+          zIndex: 1,
+          backgroundColor: '#007bff',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+        }}
+      >
+        Search
+      </button>
 
       <Map
         {...viewState}
@@ -129,7 +167,6 @@ const MapComponent = () => {
         mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxAccessToken={accessToken}
       >
-        {/* User Location Marker */}
         <Marker latitude={location.latitude} longitude={location.longitude}>
           <div
             style={{
@@ -143,7 +180,6 @@ const MapComponent = () => {
           ></div>
         </Marker>
 
-        {/* People Markers with Hover Tooltips */}
         {people.map((person, index) => (
           <Marker
             key={index}
@@ -167,7 +203,6 @@ const MapComponent = () => {
           </Marker>
         ))}
 
-        {/* Show name only on hover */}
         {hoveredPerson && (
           <Popup
             latitude={hoveredPerson.latitude}
@@ -180,158 +215,23 @@ const MapComponent = () => {
             <div>{hoveredPerson.name}</div>
           </Popup>
         )}
+
+        {selectedPerson && (
+          <Popup
+            latitude={selectedPerson.latitude}
+            longitude={selectedPerson.longitude}
+            onClose={closeModal}
+            anchor="top"
+            offset={[0, -10]}
+          >
+            <div>
+              <h3>{selectedPerson.name}</h3>
+              <p>Status: {selectedPerson.status}</p>
+              <p>Phone: {selectedPerson.phone}</p>
+            </div>
+          </Popup>
+        )}
       </Map>
-
-      {/* Add Person Form Button */}
-      <button
-        onClick={toggleFormModal}
-        style={{
-          position: 'absolute',
-          bottom: '20px',
-          left: '20px',
-          padding: '10px 15px',
-          backgroundColor: '#007bff',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-        }}
-      >
-        Add Person
-      </button>
-
-      {/* Modal for showing person details */}
-      {selectedPerson && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-            zIndex: 1000,
-            width: '300px',
-            textAlign: 'center',
-          }}
-        >
-          <h3>{selectedPerson.name}</h3>
-          <p>Status: {selectedPerson.status}</p>
-          <p>Phone: {selectedPerson.phone}</p>
-          <button
-            onClick={closeModal}
-            style={{
-              marginTop: '10px',
-              padding: '8px 16px',
-              border: 'none',
-              borderRadius: '4px',
-              backgroundColor: '#007bff',
-              color: 'white',
-              cursor: 'pointer',
-            }}
-          >
-            Close
-          </button>
-        </div>
-      )}
-
-      {/* Form Modal for adding a new person */}
-      {isFormOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-            zIndex: 1000,
-            width: '300px',
-            textAlign: 'center',
-          }}
-        >
-          <h3>Add a New Person</h3>
-          <form onSubmit={handleFormSubmit}>
-            <input
-              type="text"
-              name="name"
-              placeholder="Name"
-              value={newPerson.name}
-              onChange={handleInputChange}
-              required
-              style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
-            />
-            <input
-              type="text"
-              name="status"
-              placeholder="Status"
-              value={newPerson.status}
-              onChange={handleInputChange}
-              required
-              style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
-            />
-            <input
-              type="text"
-              name="phone"
-              placeholder="Phone"
-              value={newPerson.phone}
-              onChange={handleInputChange}
-              required
-              style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
-            />
-            <input
-              type="number"
-              name="latitude"
-              placeholder="Latitude"
-              value={newPerson.latitude}
-              onChange={handleInputChange}
-              required
-              style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
-            />
-            <input
-              type="number"
-              name="longitude"
-              placeholder="Longitude"
-              value={newPerson.longitude}
-              onChange={handleInputChange}
-              required
-              style={{ width: '100%', marginBottom: '10px', padding: '8px' }}
-            />
-            <button
-              type="submit"
-              style={{
-                marginTop: '10px',
-                padding: '8px 16px',
-                border: 'none',
-                borderRadius: '4px',
-                backgroundColor: '#007bff',
-                color: 'white',
-                cursor: 'pointer',
-              }}
-            >
-              Add
-            </button>
-          </form>
-          <button
-            onClick={toggleFormModal}
-            style={{
-              marginTop: '10px',
-              padding: '8px 16px',
-              border: 'none',
-              borderRadius: '4px',
-              backgroundColor: '#dc3545',
-              color: 'white',
-              cursor: 'pointer',
-            }}
-          >
-            Cancel
-          </button>
-        </div>
-      )}
     </div>
   );
 };
