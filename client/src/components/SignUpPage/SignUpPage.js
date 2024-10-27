@@ -115,7 +115,7 @@ const SignUpPage = ({ toggleDarkMode, isDarkMode }) => {
                         <label htmlFor="insurance_name">Insurance Name<span style={{ color: "red" }}> *</span></label>
                         <input type="text" id="insurancename" value={formData.insurancename} onChange={handleChange} placeholder="Enter your insurance name" required />
 
-                        <label htmlFor="insurance_provider">Insurance Provider<span style={{ color: "red" }}> *</span></label>
+                        <label htmlFor="insurance_provider"> Policy Number<span style={{ color: "red" }}> *</span></label>
                         <input type="text" id="policy_number" value={formData.policy_number} onChange={handleChange} placeholder="Enter your insurance provider" required />
 
                         <label htmlFor="insurance_groupNumber">Insurance Group Number<span style={{ color: "red" }}> *</span></label>
