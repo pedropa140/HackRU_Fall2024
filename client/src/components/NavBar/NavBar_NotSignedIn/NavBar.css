@@ -49,7 +49,7 @@
 }
 
 .NavBar.scrolled h1 a:hover {
-    color: #62929E;
+    color: #66cfff;
     transition: 0.1s ease-in color;
 }
 
@@ -78,7 +78,7 @@
 }
 
 .NavBar.scrolled ul li a:hover, .NavBar.scrolled ul li button:hover {
-    color: #62929E;
+    color: #66cfff;
     transition: 0.1s ease-in color;
 }
 
