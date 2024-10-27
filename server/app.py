@@ -372,6 +372,18 @@ def remove_task():
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+    
+from cloudflare import generatingActivity
+
+@app.route('/generate-tasks', methods=['GET'])
+def generate_tasks():
+    try:
+        model = "@cf/meta/llama-2-7b-chat-int8"
+        tasks = generatingActivity(model)
+        print(tasks)
+        return jsonify(tasks), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
