@@ -257,6 +257,25 @@ def delete_account():
     patient.delete()
     return jsonify({"message": "Patient account deleted successfully!"}), 200
 
+@app.route('api/generateActivities', methods=['POST'])
+def generateActivities():
+    result_dictionary = cloudflare.generatingActivity("@cf/meta/llama-2-7b-chat-int8")
+    print(result_dictionary)
+    response_text = result_dictionary['result']['response']
+
+    # Formatting response into HTML-like format
+    response_text = re.sub(r'^# (.*?)$', r'<h1>\1</h1>', response_text, flags=re.MULTILINE)
+    response_text = re.sub(r'^## (.*?)$', r'<h2>\1</h2>', response_text, flags=re.MULTILINE)
+    response_text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', response_text)
+    response_text = re.sub(r'^\* (.*?)$', r'<li>\1</li>', response_text, flags=re.MULTILINE)
+    response_text = re.sub(r'</li>\s*<li>', r'</li><li>', response_text)
+    response_text = re.sub(r'</li>\s*$', r'</li>', response_text)
+    response_text = re.sub(r'^(<li>.*?</li>\s*)+$', r'<ul>\1</ul>', response_text, flags=re.MULTILINE)
+    response_text = response_text.replace('\n', '<br>')
+
+    return jsonify({'response': response_text}), 200
+
+
 @app.route('/api/sendmessage', methods=['POST'])
 def send_message():
     data = request.json
