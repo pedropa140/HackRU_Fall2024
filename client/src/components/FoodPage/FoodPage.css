@@ -353,3 +353,141 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+/* Page Layout */
+.page-layout {
+    display: flex;
+    gap: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .meals-grid {
+    flex: 2;
+  }
+  
+  .recommendations-section {
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  @media (max-width: 1200px) {
+    .page-layout {
+      flex-direction: column;
+    }
+  }
+  
+  /* Recommendations Styles */
+  .recommendations-section {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dark-mode .recommendations-section {
+    background: #333;
+  }
+  
+  .recommendations-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .recommendations-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.5rem;
+    color: #62929E;
+  }
+  
+  .dark-mode .recommendations-header h2 {
+    color: #8ab4bf;
+  }
+  
+  .recommendations-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .recommendation-card {
+    padding: 16px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+  }
+  
+  .recommendation-card:hover {
+    transform: translateY(-2px);
+  }
+  
+  .dark-mode .recommendation-card {
+    border-color: #444;
+  }
+  
+  .recommendation-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    color: #333;
+  }
+  
+  .dark-mode .recommendation-card h3 {
+    color: #fff;
+  }
+  
+  .calories-info {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+  }
+  
+  .nutrition-info {
+    color: #888;
+    font-size: 0.8rem;
+    margin-bottom: 12px;
+  }
+  
+  .dark-mode .calories-info {
+    color: #ccc;
+  }
+  
+  .dark-mode .nutrition-info {
+    color: #999;
+  }
+  
+  .add-recommended-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #62929E;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+  }
+  
+  .add-recommended-button:hover {
+    background-color: #4a7b87;
+  }
+  
+  /* Spinner */
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #62929E;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

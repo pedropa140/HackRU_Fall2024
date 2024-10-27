@@ -488,6 +488,106 @@ def generate_tasks():
         return jsonify(tasks), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/api/getrecommendations', methods=['POST'])
+def get_recommendations():
+    data = request.json
+    current_meals = data.get('meals', [])
+    total_calories = data.get('totalCalories', 0)
+    daily_goal = data.get('dailyGoal', 2000)
+    user_email = data.get('userEmail')
+
+    if not current_meals:
+        return jsonify({'recommendations': []}), 200
+
+    remaining_calories = daily_goal - total_calories
+    
+    # Create a prompt for the AI model
+    meal_list = ", ".join(current_meals)
+    query = f"""Based on the user's current meals: {meal_list}, 
+    with {remaining_calories} calories remaining out of a {daily_goal} calorie goal,
+    suggest 3 healthy meal options. For each suggestion, include:
+    1. Name of the meal
+    2. Calorie count
+    3. Basic nutrition info
+    4. Suggested meal type (Breakfast/Lunch/Dinner)
+    Format each suggestion consistently for parsing."""
+
+    inputs = [
+        {
+            "role": "system",
+            "content": """You are a nutrition expert AI that provides healthy meal recommendations.
+            Format each meal suggestion as follows:
+            {
+                "name": "Meal Name",
+                "calories": number,
+                "nutritionInfo": "Protein: Xg, Carbs: Yg, Fat: Zg",
+                "suggestedMealType": "Breakfast/Lunch/Dinner"
+            }
+            Provide exactly 3 suggestions."""
+        },
+        {"role": "user", "content": query}
+    ]
+
+    try:
+        # Call Cloudflare AI model
+        result = cloudflare.run("@cf/meta/llama-2-7b-chat-int8", inputs)
+        
+        # Parse the response and format it
+        response_text = result['result']['response']
+        
+        # Extract recommendations from the response
+        import json
+        import re
+
+        # Find all JSON-like structures in the response
+        json_pattern = r'\{[^{}]*\}'
+        matches = re.findall(json_pattern, response_text)
+        
+        recommendations = []
+        for match in matches[:3]:  # Limit to 3 recommendations
+            try:
+                recommendation = json.loads(match)
+                # Validate the required fields
+                if all(key in recommendation for key in ['name', 'calories', 'nutritionInfo', 'suggestedMealType']):
+                    recommendations.append(recommendation)
+            except json.JSONDecodeError:
+                continue
+
+        # If user is signed in, store recommendations in their profile
+        if user_email:
+            patient = Patient.objects(email=user_email).first()
+            if patient:
+                # Store last 3 recommendations
+                patient.update(set__foodTracker=recommendations[:3])
+
+        return jsonify({'recommendations': recommendations}), 200
+
+    except Exception as e:
+        print(f"Error getting recommendations: {str(e)}")
+        return jsonify({
+            'error': 'Failed to get recommendations',
+            'recommendations': [
+                {
+                    "name": "Greek Yogurt Parfait",
+                    "calories": 300,
+                    "nutritionInfo": "Protein: 15g, Carbs: 45g, Fat: 8g",
+                    "suggestedMealType": "Breakfast"
+                },
+                {
+                    "name": "Grilled Chicken Salad",
+                    "calories": 400,
+                    "nutritionInfo": "Protein: 35g, Carbs: 20g, Fat: 15g",
+                    "suggestedMealType": "Lunch"
+                },
+                {
+                    "name": "Baked Salmon with Quinoa",
+                    "calories": 450,
+                    "nutritionInfo": "Protein: 40g, Carbs: 35g, Fat: 20g",
+                    "suggestedMealType": "Dinner"
+                }
+            ]
+        }), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
