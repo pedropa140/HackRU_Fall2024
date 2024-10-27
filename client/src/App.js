@@ -16,6 +16,7 @@ import GenerateTasks from './components/GenerateTasks/GenerateTasks';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import PublicRoute from './components/PublicRoute/PublicRoute';
 import CaregiverSignUpPage from './components/CaregiverSignUp/CaregiverSignUp';
+import ProviderPage from './components/ProviderPage/ProviderPage';
 
 import './App.css';
 
@@ -84,6 +85,7 @@ const App = () => {
                             </PrivateRoute>
                         }
                     />
+                    <Route path="/primary-provider" element={<ProviderPage toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />} />
 
                     <Route
                         path="/calendar"
