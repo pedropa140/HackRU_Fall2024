@@ -31,7 +31,7 @@ const NavBarNotSignedIn = ({ toggleDarkMode, isDarkMode, toggleModal, toggleSign
   return (
     <div className={`NavBar ${isScrolled ? 'scrolled' : ''}`}>
       <h1>
-        <Link to="/" onClick={handleTitleClick}>Memory+</Link>
+        <Link to="/" onClick={handleTitleClick}>SoulNest</Link>
       </h1>
       <ul className="nav-links">
         <li><Link to="/about" onClick={handleTitleClick}>About Us</Link></li>

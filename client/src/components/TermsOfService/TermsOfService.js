@@ -49,7 +49,7 @@ const TermsOfService = ({ toggleDarkMode, isDarkMode }) => {
             <div className='terms-of-service-content'>
                 <h1>Terms of Service</h1>
                 <p>
-                    Welcome to [Our Platform]. By accessing or using our services, you agree to comply with and be bound by these Terms of Service. Please read them carefully. If you do not agree with any part of these terms, you must not use our services.
+                    Welcome to SoulNest. By accessing or using our services, you agree to comply with and be bound by these Terms of Service. Please read them carefully. If you do not agree with any part of these terms, you must not use our services.
                 </p>
 
                 <h2>1. Acceptance of Terms</h2>
@@ -91,7 +91,7 @@ const TermsOfService = ({ toggleDarkMode, isDarkMode }) => {
 
                 <h2>6. Intellectual Property</h2>
                 <p>
-                    All content, trademarks, and other intellectual property on our platform are the property of [Our Platform] or our licensors. You are granted a limited license to access and use the services for personal, non-commercial purposes.
+                    All content, trademarks, and other intellectual property on our platform are the property of SoulNest or our licensors. You are granted a limited license to access and use the services for personal, non-commercial purposes.
                 </p>
 
                 <h2>7. Third-Party Services</h2>
@@ -101,25 +101,18 @@ const TermsOfService = ({ toggleDarkMode, isDarkMode }) => {
 
                 <h2>8. Limitation of Liability</h2>
                 <p>
-                    To the fullest extent permitted by law, [Our Platform] shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the services, even if we have been advised of the possibility of such damages.
+                    To the fullest extent permitted by law, SoulNest shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the services, even if we have been advised of the possibility of such damages.
                 </p>
 
                 <h2>9. Indemnification</h2>
                 <p>
-                    You agree to indemnify and hold harmless [Our Platform], its affiliates, and their respective officers, directors, employees, and agents from any claims, damages, losses, liabilities, costs, or expenses arising from your use of the services or violation of these terms.
+                    You agree to indemnify and hold harmless SoulNest, its affiliates, and their respective officers, directors, employees, and agents from any claims, damages, losses, liabilities, costs, or expenses arising from your use of the services or violation of these terms.
                 </p>
 
                 <h2>10. Governing Law</h2>
                 <p>
                     These Terms of Service shall be governed by and construed in accordance with the laws of [Your Country/State]. Any disputes arising from these terms shall be resolved in the courts located in [Your Jurisdiction].
                 </p>
-
-                <h2>11. Contact Us</h2>
-                <p>
-                    If you have any questions or concerns about these Terms of Service, please contact us at:
-                </p>
-                <p>Email: support@ourplatform.com</p>
-                <p>Address: 123 Terms St., Your City, Your Country</p>
 
             </div>
             <br />

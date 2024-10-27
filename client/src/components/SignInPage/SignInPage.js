@@ -27,36 +27,27 @@ const SignInPage = ({ toggleDarkMode, isDarkMode }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
-        const payload = {
-            email: email,
-            password: password,
-        };
-    
+
+        const payload = { email, password };
+
         try {
-            const response = await fetch('/api/signin', {
+            const response = await fetch('/api/PatientSignin', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
             });
-    
+
             if (response.ok) {
                 const data = await response.json();
                 sessionStorage.setItem('userEmail', email);
                 setNotificationMessage(data.message);
-                setErrorMessage('');
                 setIsSuccess(true);
-                setShowNotification(true);
             } else {
-                setErrorMessage('Failed to sign in. Please check your credentials.');
                 setNotificationMessage('Failed to sign in. Please check your credentials.');
                 setIsSuccess(false);
-                setShowNotification(true);
             }
+            setShowNotification(true);
         } catch (error) {
-            setErrorMessage('An error occurred while trying to sign in.');
             setNotificationMessage('An error occurred while trying to sign in.');
             setIsSuccess(false);
             setShowNotification(true);
@@ -65,20 +56,16 @@ const SignInPage = ({ toggleDarkMode, isDarkMode }) => {
 
     const handleNotificationClose = () => {
         setShowNotification(false);
-        if (isSuccess) {
-            navigate('/dashboard');
-        }
+        if (isSuccess) navigate('/dashboard');
     };
 
     return (
         <section id='SignInPage' className={isDarkMode ? 'dark-mode' : ''}>
             <NavBar toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} toggleSignUpModal={toggleSignUpModal} />
-
             <SignUpModal isOpen={isSignUpModalOpen} onClose={toggleSignUpModal} isDarkMode={isDarkMode} />
 
             <div className='SignInPage_hero'>
                 <h1 className='hero_title'>Sign In</h1>
-
                 <div className={`signin_modal-content modal-content ${isDarkMode ? 'dark-mode' : ''}`}>
                     <form className="signin-form" onSubmit={handleSubmit}>
                         <label htmlFor="email">Email</label>
@@ -90,7 +77,6 @@ const SignInPage = ({ toggleDarkMode, isDarkMode }) => {
                             placeholder="Enter your email"
                             required
                         />
-
                         <label htmlFor="password">Password</label>
                         <input
                             type="password"
@@ -100,10 +86,7 @@ const SignInPage = ({ toggleDarkMode, isDarkMode }) => {
                             placeholder="Enter your password"
                             required
                         />
-
                         {errorMessage && <p className="error-message">{errorMessage}</p>}
-                        {isSuccess && <p className="success-message">{notificationMessage}</p>}
-
                         <button type="submit" className="signin-button">Sign In</button>
                     </form>
                     <p className="signup-prompt">
@@ -124,6 +107,6 @@ const SignInPage = ({ toggleDarkMode, isDarkMode }) => {
             />
         </section>
     );
-}
+};
 
 export default SignInPage;

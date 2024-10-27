@@ -19,7 +19,7 @@ const SignUpPage = ({ toggleDarkMode, isDarkMode }) => {
         dob: '',
         password: '',
         reenterpassword: '',
-        insurance_name: '',
+        insurancename: '',
         policy_number: '',
         group_number: ''
     });
@@ -28,13 +28,9 @@ const SignUpPage = ({ toggleDarkMode, isDarkMode }) => {
     const [notificationMessage, setNotificationMessage] = useState('');
     const [isSuccess, setIsSuccess] = useState(false);
 
-    const toggleSignInModal = () => {
-        setIsSignInModalOpen(!isSignInModalOpen);
-    };
+    const toggleSignInModal = () => setIsSignInModalOpen(!isSignInModalOpen);
 
-    useEffect(() => {
-        document.title = 'Sign Up';
-    }, []);
+    useEffect(() => { document.title = 'Sign Up'; }, []);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -48,13 +44,10 @@ const SignUpPage = ({ toggleDarkMode, isDarkMode }) => {
         }
 
         setPasswordError('');
-        console.log(formData)
-
+        
         fetch('/api/patientSignup', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         })
             .then(response => response.json())
@@ -73,79 +66,55 @@ const SignUpPage = ({ toggleDarkMode, isDarkMode }) => {
 
     const handleNotificationClose = () => {
         setShowNotification(false);
-        if (isSuccess) {
-            navigate('/signin');
-        }
+        if (isSuccess) navigate('/signin');
     };
 
     return (
         <section id='SignUpPage' className={isDarkMode ? 'dark-mode' : ''}>
             <NavBar toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} toggleSignInModal={toggleSignInModal} />
-
             <SignInModal isOpen={isSignInModalOpen} onClose={toggleSignInModal} isDarkMode={isDarkMode} />
 
             <div className='SignUpPage_hero'>
                 <h1 className='hero_title'>Sign Up</h1>
-
                 <div className={`signup_modal-content modal-content ${isDarkMode ? 'dark-mode' : ''}`}>
                     <form className="signup-form" onSubmit={handleSubmit}>
+                        {/* Form Fields */}
                         <label htmlFor="firstname">First Name<span style={{ color: "red" }}> *</span></label>
                         <input type="text" id="firstname" value={formData.firstname} onChange={handleChange} placeholder="Enter your first name" required />
-
                         <label htmlFor="lastname">Last Name<span style={{ color: "red" }}> *</span></label>
                         <input type="text" id="lastname" value={formData.lastname} onChange={handleChange} placeholder="Enter your last name" required />
-
                         <label htmlFor="email">Email<span style={{ color: "red" }}> *</span></label>
                         <input type="email" id="email" value={formData.email} onChange={handleChange} placeholder="Enter your email" required />
-                        
-                        {/* DATE OF BIRTH */}
-                        <label for="birthday">Date of Birth:</label>
-                        <input type="date" id="dob" name="dob" value={formData.dob} onChange={handleChange}/>
-
+                        <label htmlFor="dob">Date of Birth<span style={{ color: "red" }}> *</span></label>
+                        <input type="date" id="dob" value={formData.dob} onChange={handleChange} required />
                         <label htmlFor="password">Password<span style={{ color: "red" }}> *</span></label>
                         <input type="password" id="password" value={formData.password} onChange={handleChange} placeholder="Enter your password" required />
-                        
                         <label htmlFor="reenterpassword">Re-Enter Password<span style={{ color: "red" }}> *</span></label>
                         <input type="password" id="reenterpassword" value={formData.reenterpassword} onChange={handleChange} placeholder="Re-enter your password" required />
 
-
-                        {/* INSURANCE */}
-                        {/* name, provider, groupnumber*/}
-
-                        <label htmlFor="insurance_name">Insurance Name<span style={{ color: "red" }}> *</span></label>
+                        {/* Insurance Fields */}
+                        <label htmlFor="insurancename">Insurance Name<span style={{ color: "red" }}> *</span></label>
                         <input type="text" id="insurancename" value={formData.insurancename} onChange={handleChange} placeholder="Enter your insurance name" required />
-
-                        <label htmlFor="insurance_provider"> Policy Number<span style={{ color: "red" }}> *</span></label>
-                        <input type="text" id="policy_number" value={formData.policy_number} onChange={handleChange} placeholder="Enter your insurance provider" required />
-
-                        <label htmlFor="insurance_groupNumber">Insurance Group Number<span style={{ color: "red" }}> *</span></label>
+                        <label htmlFor="policy_number">Policy Number<span style={{ color: "red" }}> *</span></label>
+                        <input type="text" id="policy_number" value={formData.policy_number} onChange={handleChange} placeholder="Enter your policy number" required />
+                        <label htmlFor="group_number">Group Number<span style={{ color: "red" }}> *</span></label>
                         <input type="text" id="group_number" value={formData.group_number} onChange={handleChange} placeholder="Enter your group number" required />
 
                         <div className="privacy-policy-checkbox">
-                            <input
-                                type="checkbox"
-                                id="privacyPolicy"
-                                checked={isAgreed}
-                                onChange={() => setIsAgreed(!isAgreed)}
-                                required
-                            />
+                            <input type="checkbox" id="privacyPolicy" checked={isAgreed} onChange={() => setIsAgreed(!isAgreed)} required />
                             <label htmlFor="privacyPolicy">
                                 I agree to the <a href="/privacypolicy" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="/termsofservice" target="_blank" rel="noopener noreferrer">Terms of Service</a><span style={{ color: "red" }}> *</span>
                             </label>
                         </div>
-
-                        <p style={{ color: 'red', marginTop: '0px', marginBottom: '10px', fontSize: '10px', textAlign: 'center' }}>{passwordError}</p>
+                        {passwordError && <p style={{ color: 'red', textAlign: 'center' }}>{passwordError}</p>}
 
                         <button type="submit" className="signup-button">Sign Up</button>
                     </form>
-                    <p className="signup-prompt">
-                        Already have an account? <Link to="/signin" className="signup-link">Sign in here</Link>.
-                    </p>
+                    <p className="signup-prompt">Already have an account? <Link to="/signin" className="signup-link">Sign in here</Link>.</p>
                 </div>
             </div>
 
             <Footer />
-
             <NotificationModal
                 isOpen={showNotification}
                 message={notificationMessage}
@@ -156,6 +125,6 @@ const SignUpPage = ({ toggleDarkMode, isDarkMode }) => {
             />
         </section>
     );
-}
+};
 
 export default SignUpPage;

@@ -16,6 +16,15 @@ from geopy.geocoders import Nominatim
 app = Flask(__name__)
 load_dotenv()
 
+# Route to provide Mapbox access token to frontend
+@app.route('/api/get_map_config', methods=['GET'])
+def get_map_config():
+    access_token = os.getenv("MAPBOX_ACCESS_TOKEN")
+    if access_token:
+        return jsonify({"accessToken": access_token})
+    else:
+        return jsonify({"error": "Mapbox access token not found"}), 500
+
 MONGODB_URL = os.getenv('MONGODB_URI')
 client = MongoClient(MONGODB_URL, tlsCAFile=certifi.where())
 
@@ -70,6 +79,13 @@ class Patient(Document):
     primaryProvider = PrimaryProvider
     foodTracker = ListField(StringField())
 
+    def set_password(self, raw_password):
+        hashed = bcrypt.hashpw(raw_password.encode('utf-8'), bcrypt.gensalt())
+        self.password = hashed.decode('utf-8')
+
+    def check_password(self, raw_password):
+        return bcrypt.checkpw(raw_password.encode('utf-8'), self.password.encode('utf-8'))
+
 class Caregiver(Document):
     firstName = StringField(required=True)
     lastName =  StringField(required=True)
@@ -92,38 +108,42 @@ def caregiverSignup():
     )
     caregiver.save()
     
-# Patient Signup with password hashing
-@app.route('/api/PatientSignup', methods=['POST'])
-def patientSignup():
+@app.route('/api/patientSignup', methods=['POST'])
+def signup():
     form_data = request.json
-    firstname = form_data['firstname']
-    lastname = form_data['lastname']
-    email = form_data['email']
-    password = form_data['password']
-    dob = form_data['dob']
-    insurancename = form_data['insurancename']
-    policy_number = form_data['policy_number']    
-    group_number = form_data['group_number']
+
+    firstname = form_data.get('firstname')
+    lastname = form_data.get('lastname')
+    email = form_data.get('email')
+    password = form_data.get('password')
+    dob = datetime.strptime(form_data.get('dob'), "%Y-%m-%d")
+    insurancename = form_data.get('insurancename')
+    policy_number = form_data.get('policy_number')    
+    group_number = form_data.get('group_number')
+
+    if Patient.objects(email=email).first():
+        return jsonify({"message": "Email already exists!"}), 400
+
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     insurance = Insurance(
-        name = insurancename,
-        policy_number = policy_number,
-        group_number = group_number,
+        name=insurancename,
+        policy_number=policy_number,
+        group_number=group_number,
     )
+
     patient = Patient(
-        firstName = firstname,
-        lastName = lastname,
-        email = email,
-        DOB =  dob,
-        password = password,
-        insurance = insurance
+        firstName=firstname,
+        lastName=lastname,
+        email=email,
+        DOB=dob,
+        password=hashed_password.decode('utf-8'),
+        insurance=insurance
     )
     patient.save()
-    return jsonify({"message": "Patient registered successfully!"}), 201
+    return jsonify({"message": "User registered successfully!"}), 201
 
-
-
-@app.route('/api/signin', methods=['POST'])
+@app.route('/api/PatientSignin', methods=['POST'])
 def patientSignin():
     form_data = request.json
     email = form_data.get('email')
@@ -134,8 +154,7 @@ def patientSignin():
     if not patient:
         return jsonify({"message": "Patient not found!"}), 404
 
-    # Check if provided password matches the stored hashed password
-    if not patient.check_password(password):
+    if not bcrypt.checkpw(password.encode('utf-8'), patient.password.encode('utf-8')):
         return jsonify({"message": "Incorrect password!"}), 401
 
     return jsonify({
@@ -197,25 +216,6 @@ def delete_account():
 
     patient.delete()
     return jsonify({"message": "Patient account deleted successfully!"}), 200
-
-@app.route('api/generateActivities', methods=['POST'])
-def generateActivities():
-    result_dictionary = cloudflare.generatingActivity("@cf/meta/llama-2-7b-chat-int8")
-    print(result_dictionary)
-    response_text = result_dictionary['result']['response']
-
-    # Formatting response into HTML-like format
-    response_text = re.sub(r'^# (.*?)$', r'<h1>\1</h1>', response_text, flags=re.MULTILINE)
-    response_text = re.sub(r'^## (.*?)$', r'<h2>\1</h2>', response_text, flags=re.MULTILINE)
-    response_text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', response_text)
-    response_text = re.sub(r'^\* (.*?)$', r'<li>\1</li>', response_text, flags=re.MULTILINE)
-    response_text = re.sub(r'</li>\s*<li>', r'</li><li>', response_text)
-    response_text = re.sub(r'</li>\s*$', r'</li>', response_text)
-    response_text = re.sub(r'^(<li>.*?</li>\s*)+$', r'<ul>\1</ul>', response_text, flags=re.MULTILINE)
-    response_text = response_text.replace('\n', '<br>')
-
-    return jsonify({'response': response_text}), 200
-
 
 @app.route('/api/sendmessage', methods=['POST'])
 def send_message():
@@ -427,6 +427,18 @@ def remove_task():
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+    
+from cloudflare import generatingActivity
+
+@app.route('/generate-tasks', methods=['GET'])
+def generate_tasks():
+    try:
+        model = "@cf/meta/llama-2-7b-chat-int8"
+        tasks = generatingActivity(model)
+        print(tasks)
+        return jsonify(tasks), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
