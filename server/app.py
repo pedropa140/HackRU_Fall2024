@@ -79,13 +79,6 @@ class Patient(Document):
     primaryProvider = PrimaryProvider
     foodTracker = ListField(StringField())
 
-    def set_password(self, raw_password):
-        hashed = bcrypt.hashpw(raw_password.encode('utf-8'), bcrypt.gensalt())
-        self.password = hashed.decode('utf-8')
-
-    def check_password(self, raw_password):
-        return bcrypt.checkpw(raw_password.encode('utf-8'), self.password.encode('utf-8'))
-
 class Caregiver(Document):
     firstName = StringField(required=True)
     lastName =  StringField(required=True)
@@ -126,7 +119,6 @@ def signup():
     if Patient.objects(email=email).first():
         return jsonify({"message": "Email already exists!"}), 400
 
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     insurance = Insurance(
         name=insurancename,
@@ -139,7 +131,7 @@ def signup():
         lastName=lastname,
         email=email,
         DOB=dob,
-        password=hashed_password.decode('utf-8'),
+        password=password,
         insurance=insurance
     )
     patient.save()
@@ -151,14 +143,19 @@ def patientSignin():
     email = form_data.get('email')
     password = form_data.get('password')
 
+    print(f"Received sign-in request for email: {email}")
+
     patient = Patient.objects(email=email).first()
 
     if not patient:
+        print("Patient not found!")
         return jsonify({"message": "Patient not found!"}), 404
 
-    if not bcrypt.checkpw(password.encode('utf-8'), patient.password.encode('utf-8')):
+    if patient.password != password:
+        print("Incorrect password!")
         return jsonify({"message": "Incorrect password!"}), 401
 
+    print("Patient signed in successfully!")
     return jsonify({
         "message": "Signed in successfully!",
         "email": patient.email,
