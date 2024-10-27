@@ -69,10 +69,19 @@ class Patient (Document):
     foodTracker = ListField(StringField())
 CORS(app)
 
-def set_password(self, raw_password):
-        hashed = bcrypt.hashpw(raw_password.encode('utf-8'), bcrypt.gensalt())
-        self.password = hashed.decode('utf-8')
+class Caregiver(Document):
+    firstName = StringField(required=True)
+    lastName =  StringField(required=True)
+    email = EmailField(required=True)
+    password = StringField(required=True)
+    coordinates = EmbeddedDocumentField(Coordinate)
 
+@app.route("/api/caregiverSignup", methods=["POST"])
+def caregiverSignup():
+    form_data = request.json
+    firstname = form_data['firstname']
+    lastname = form_data['lastname']
+    
 
 @app.route('/api/patientSignup', methods=['POST'])
 def patientSignup():
@@ -101,6 +110,8 @@ def patientSignup():
     )
     patient.save()
     return jsonify({"message": "Patient registered successfully!"}), 201
+
+
 @app.route('/api/signup', methods=['POST'])
 def signup():
     form_data = request.json
@@ -132,25 +143,6 @@ def signup():
     except Exception as e:
         return jsonify({"message": "An error occurred while creating the user."}), 500
 
-@app.route('/api/signin', methods=['POST'])
-def signin():
-    form_data = request.json
-
-    email = form_data.get('email')
-    password = form_data.get('password')
-
-    user = User.objects(email=email).first()
-
-    if not user:
-        return jsonify({"message": "User not found!"}), 404
-
-    if not user.check_password(password):
-        return jsonify({"message": "Incorrect password!"}), 401
-
-    return jsonify({
-        "message": "Signed in successfully!",
-        "email": user.email,
-    }), 200
 
 @app.route('/api/userinfo', methods=['GET'])
 def get_user_info():
