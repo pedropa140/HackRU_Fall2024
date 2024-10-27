@@ -53,7 +53,7 @@ const PrivacyPolicy = ({ toggleDarkMode, isDarkMode }) => {
             <div className='privacy-policy-content'>
                 <h1>Privacy Policy</h1>
                 <p>
-                    Welcome to [Our Platform]. Your privacy is of paramount importance to us. This privacy policy describes the types of personal information we collect, how we use it, who we share it with, and the choices available to you. By using our platform, you consent to the collection and use of your information as described in this policy.
+                    Welcome to SoulNest. Your privacy is of paramount importance to us. This privacy policy describes the types of personal information we collect, how we use it, who we share it with, and the choices available to you. By using our platform, you consent to the collection and use of your information as described in this policy.
                 </p>
 
                 <h2>1. Information We Collect</h2>

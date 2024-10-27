@@ -79,7 +79,7 @@ const NavBarSignedIn = ({ toggleDarkMode, isDarkMode }) => {
   return (
     <div className={`NavBar ${isScrolled ? 'scrolled' : ''}`}>
       <h1>
-        <Link to="/" onClick={handleTitleClick}>OUR PLATFORM</Link>
+        <Link to="/" onClick={handleTitleClick}>SoulNest</Link>
       </h1>
       <ul className="nav-links">
         <li><Link to="/dashboard" onClick={handleTitleClick}>Dashboard</Link></li>

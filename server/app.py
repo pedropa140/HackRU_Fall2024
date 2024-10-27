@@ -15,6 +15,15 @@ from cloudflare import run, generatingActivity
 app = Flask(__name__)
 load_dotenv()
 
+# Route to provide Mapbox access token to frontend
+@app.route('/api/get_map_config', methods=['GET'])
+def get_map_config():
+    access_token = os.getenv("MAPBOX_ACCESS_TOKEN")
+    if access_token:
+        return jsonify({"accessToken": access_token})
+    else:
+        return jsonify({"error": "Mapbox access token not found"}), 500
+
 MONGODB_URL = os.getenv('MONGODB_URI')
 client = MongoClient(MONGODB_URL, tlsCAFile=certifi.where())
 
