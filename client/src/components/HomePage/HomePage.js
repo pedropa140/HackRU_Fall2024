@@ -85,15 +85,15 @@ const HomePage = ({ toggleDarkMode, isDarkMode }) => {
         <h2 className='testimonials_title'>What Our Users Say</h2>
         <div className='testimonials_list'>
           <div className='testimonial_item'>
-            <p>"This platform changed the way I work. It's intuitive and powerful!"</p>
+            <p>&quot;This platform changed the way I work. It&apos;s intuitive and powerful!&quot;</p>
             <span>- Alex R.</span>
           </div>
           <div className='testimonial_item'>
-            <p>"I love the community here. Everyone is so helpful and friendly."</p>
+            <p>&quot;I love the community here. Everyone is so helpful and friendly.&quot;</p>
             <span>- Sarah K.</span>
           </div>
           <div className='testimonial_item'>
-            <p>"Privacy and security are top-notch. I feel safe using this platform."</p>
+            <p>&quot;Privacy and security are top-notch. I feel safe using this platform.&quot;</p>
             <span>- John D.</span>
           </div>
         </div>
@@ -110,11 +110,11 @@ const HomePage = ({ toggleDarkMode, isDarkMode }) => {
         <h2 className='faq_title'>Frequently Asked Questions</h2>
         <div className='faq_item'>
           <h3>How do I create an account?</h3>
-          <p>You can create an account by clicking the "Get Started" button above.</p>
+          <p>You can create an account by clicking the &quot;Get Started&quot; button above.</p>
         </div>
         <div className='faq_item'>
           <h3>What if I forget my password?</h3>
-          <p>You can reset your password using the "Forgot Password" link on the login page.</p>
+          <p>You can reset your password using the &quot;Forgot Password&quot; link on the login page.</p>
         </div>
         <div className='faq_item'>
           <h3>Is my data safe?</h3>
