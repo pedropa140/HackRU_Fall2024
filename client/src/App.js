@@ -18,6 +18,7 @@ import PublicRoute from './components/PublicRoute/PublicRoute';
 import CaregiverSignUpPage from './components/CaregiverSignUp/CaregiverSignUp';
 import FoodPage from './components/FoodPage/FoodPage';
 import CaregiverDashboardPage from './components/CaregiverDashboard/caregiverdashboard';
+import ProviderPage from './components/ProviderPage/ProviderPage';
 
 import './App.css';
 
@@ -94,6 +95,7 @@ const App = () => {
                             </PrivateRoute>
                         }
                     />
+                    <Route path="/primary-provider" element={<ProviderPage toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />} />
 
                     <Route
                         path="/calendar"

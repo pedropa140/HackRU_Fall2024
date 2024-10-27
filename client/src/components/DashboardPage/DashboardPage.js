@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './DashboardPage.css';
 import NavBarNotSignedIn from '../NavBar/NavBar_NotSignedIn/NavBar';
 import NavBarSignedIn from '../NavBar/NavBar_SignedIn/NavBar';
@@ -11,6 +12,7 @@ const DashboardPage = ({ toggleDarkMode, isDarkMode }) => {
     const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
     const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
     const isUserSignedIn = sessionStorage.getItem('userEmail') !== null;
+    const navigate = useNavigate();
 
     const toggleSignInModal = () => {
         setIsSignInModalOpen(!isSignInModalOpen);
@@ -37,7 +39,7 @@ const DashboardPage = ({ toggleDarkMode, isDarkMode }) => {
                     throw new Error('User not found');
                 }
                 const data = await response.json();
-                console.log(data)
+                console.log(data);
                 setUserInfo(data);
             } catch (err) {
                 setError(err.message);
@@ -114,7 +116,10 @@ const DashboardPage = ({ toggleDarkMode, isDarkMode }) => {
                 <p className='hero_subtitle'>
                     Today is {formattedDate} {formattedTime}
                 </p>
-                <h2>Find the ones who care! </h2>
+
+                <button className="button" onClick={() => navigate('/primary-provider')}>
+                     <span>View Primary Provider</span>
+                </button>
             </div>
 
             <div className='DashboardPage_content'><MapComponent /></div>
@@ -124,3 +129,4 @@ const DashboardPage = ({ toggleDarkMode, isDarkMode }) => {
 };
 
 export default DashboardPage;
+
