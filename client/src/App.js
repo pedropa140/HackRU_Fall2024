@@ -15,7 +15,7 @@ import ChatBotPage from './components/ChatBotPage/ChatBotPage';
 import GenerateTasks from './components/GenerateTasks/GenerateTasks';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import PublicRoute from './components/PublicRoute/PublicRoute';
-import SignUpPage from './components/CaregiverSignUp/CaregiverSignUpPage';
+import CaregiverSignUpPage from './components/CaregiverSignUp/CaregiverSignUp';
 
 import './App.css';
 
@@ -60,7 +60,7 @@ const App = () => {
                         path="/caregiversignup"
                         element={
                             <PublicRoute>
-                                <CaregiverSignUp toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
+                                <CaregiverSignUpPage toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
                             </PublicRoute>
                         }
                     />

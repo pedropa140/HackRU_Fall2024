@@ -36,7 +36,7 @@ const NavBarNotSignedIn = ({ toggleDarkMode, isDarkMode, toggleModal, toggleSign
       <ul className="nav-links">
         <li><Link to="/about" onClick={handleTitleClick}>About Us</Link></li>
         <li><Link to="/signup" onClick={handleTitleClick}> Patient Sign Up</Link></li>
-        <li><Link to="/signup" onClick={handleTitleClick}> Patient Sign Up</Link></li>
+        <li><Link to="/caregiversignup" onClick={handleTitleClick}> Caregiver Sign Up</Link></li>
 
         <li><Link to="/signin" onClick={handleTitleClick}>Sign In</Link></li>
         {/* <li><button className="signup_nav-button" onClick={toggleSignUpModal}>Sign up</button></li>
