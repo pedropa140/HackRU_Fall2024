@@ -61,9 +61,9 @@ class Patient (Document):
     email = EmailField(required=True)
     DOB = DateTimeField(required=True)
     password = StringField(required=True)
-    coordinates = Coordinate
+    coordinates = EmbeddedDocumentField(Coordinate)
     appointments = ListField(EmbeddedDocumentField(Appointment))
-    insurance = Insurance(required=True)
+    insurance = EmbeddedDocumentField(Insurance, required=True)
     activities = ListField(EmbeddedDocumentField(Activity))
     primaryProvider = PrimaryProvider
     foodTracker = ListField(StringField())
@@ -74,7 +74,7 @@ def set_password(self, raw_password):
         self.password = hashed.decode('utf-8')
 
 
-@app.route('/api/patientSignup')
+@app.route('/api/patientSignup', methods=['POST'])
 def patientSignup():
     form_data = request.json
     firstname = form_data['firstname']
@@ -85,32 +85,22 @@ def patientSignup():
     insurancename = form_data['insurancename']
     policy_number = form_data['policy_number']    
     group_number = form_data['group_number']
-    deductible = None
-    copay = None
-    coverage = None
-    if form_data['copay'] not in None and form_data['copay'] != "":
-        copay = form_data['copay']
-    if form_data['deductible'] not in None and form_data['deductible'] != "":
-        deductible = form_data['deductible']
-    if form_data['coverage'] not in None and form_data['coverage'] != "":
-        coverage = form_data['coverage']
+
     insurance = Insurance(
         name = insurancename,
         policy_number = policy_number,
         group_number = group_number,
-        deductible = deductible,
-        copay = copay,
-        coverage = coverage
     )
     patient = Patient(
-        firstname = firstname,
-        lastname = lastname,
+        firstName = firstname,
+        lastName = lastname,
         email = email,
         DOB =  dob,
         password = password,
         insurance = insurance
     )
     patient.save()
+    return jsonify({"message": "Patient registered successfully!"}), 201
 @app.route('/api/signup', methods=['POST'])
 def signup():
     form_data = request.json
