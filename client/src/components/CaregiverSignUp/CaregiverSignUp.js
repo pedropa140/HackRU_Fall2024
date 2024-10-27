@@ -45,7 +45,7 @@ const CaregiverSignUpPage = ({ toggleDarkMode, isDarkMode }) => {
         setPasswordError('');
         console.log(formData)
 
-        fetch('/api/patientSignup', {
+        fetch('/api/caregiverSignup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

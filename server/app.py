@@ -107,6 +107,8 @@ def caregiverSignup():
         password = password
     )
     caregiver.save()
+    return jsonify({"message": "User registered successfully!"}), 201
+
     
 @app.route('/api/patientSignup', methods=['POST'])
 def signup():
