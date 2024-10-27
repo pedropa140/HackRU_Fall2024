@@ -6,7 +6,6 @@ const ProfileModal = ({ isOpen, onClose, userEmail, onSave, isDarkMode }) => {
     const [formData, setFormData] = useState({
         firstname: '',
         lastname: '',
-        username: '',
         email: userEmail || '',
         oldPassword: '',
         newPassword: '',
@@ -39,9 +38,7 @@ const ProfileModal = ({ isOpen, onClose, userEmail, onSave, isDarkMode }) => {
                     ...prevState,
                     firstname: userData.firstname,
                     lastname: userData.lastname,
-                    username: userData.username,
                     email: userData.email,
-                    createdDate: formattedCreatedDate,
                 }));
             } else {
                 console.log('User not found');
@@ -72,7 +69,6 @@ const ProfileModal = ({ isOpen, onClose, userEmail, onSave, isDarkMode }) => {
                 body: JSON.stringify({
                     firstname: formData.firstname,
                     lastname: formData.lastname,
-                    username: formData.username,
                     email: formData.email,
                 }),
             });
@@ -166,9 +162,7 @@ const ProfileModal = ({ isOpen, onClose, userEmail, onSave, isDarkMode }) => {
                     <div className={isDarkMode ? 'dark-mode user-info-display' : 'user-info-display'}>
                         <h3>User Info:</h3>
                         <p><strong>Name:</strong> {formData.firstname} {formData.lastname}</p>
-                        <p><strong>Username:</strong> {formData.username}</p>
                         <p><strong>Email:</strong> {formData.email}</p>
-                        <p><strong>Date Created:</strong> {formData.createdDate}</p>
                     </div>
 
                     <div className={isDarkMode ? 'dark-mode update-profile' : 'update-profile'}>
@@ -198,16 +192,6 @@ const ProfileModal = ({ isOpen, onClose, userEmail, onSave, isDarkMode }) => {
                                         name="lastname"
                                         placeholder={formData.lastname}
                                         value={formData.lastname}
-                                        onChange={handleChange}
-                                    />
-                                </label>
-                                <label>
-                                    Username:
-                                    <input
-                                        type="text"
-                                        name="username"
-                                        placeholder={formData.username}
-                                        value={formData.username}
                                         onChange={handleChange}
                                     />
                                 </label>
