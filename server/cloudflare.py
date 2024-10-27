@@ -18,9 +18,9 @@ def generatingActivity(model):
     headers = {"Authorization": CLOUDFLARE_API}
     input = { 
         "messages": (
-            "generate a list of  3 activities someone with alziemers/dementia could do to improve their memory. "
+            "generate a list of 3 activities someone with alziemers/dementia could do to improve their memory. "
             "Give it in the format of a list of jsons the json format being "
-            '{"name": "example", "datetime": "datetime"}'
+            '{"name": "example", "datetime": "datetime"} and let the date time be the day of the query'
         )
     }
     response = requests.post(f"{API_BASE_URL}{model}", headers=headers, json=input)
