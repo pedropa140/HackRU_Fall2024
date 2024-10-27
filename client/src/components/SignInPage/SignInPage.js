@@ -34,7 +34,7 @@ const SignInPage = ({ toggleDarkMode, isDarkMode }) => {
         };
     
         try {
-            const response = await fetch('/api/signin', {
+            const response = await fetch('/api/PatientSignin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
