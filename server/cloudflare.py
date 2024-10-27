@@ -26,4 +26,4 @@ def generatingActivity(model):
     response = requests.post(f"{API_BASE_URL}{model}", headers=headers, json=input)
     return response.json()
 
-    
+   
