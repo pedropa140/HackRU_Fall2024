@@ -39,11 +39,9 @@ const CalendarPage = ({ toggleDarkMode, isDarkMode }) => {
         date: formattedDate,
         start_time: task.start_time,
         end_time: task.end_time,
-        description: task.description
-      }
+        description: task.description,
+      },
     };
-
-    console.log(taskData)
 
     fetch('/api/addTask', {
       method: 'POST',
@@ -60,8 +58,6 @@ const CalendarPage = ({ toggleDarkMode, isDarkMode }) => {
         }
       })
       .then((data) => {
-        console.log('Task added:', data);
-
         setTasks((prevTasks) => ({
           ...prevTasks,
           [formattedDate]: [...(prevTasks[formattedDate] || []), task],
@@ -76,15 +72,11 @@ const CalendarPage = ({ toggleDarkMode, isDarkMode }) => {
       });
   };
 
-
   const removeTask = (date, taskIndex) => {
-    const formattedDate = date.toDateString();
+    const formattedDate = date.toISOString().split('T')[0];
 
     setTasks((prevTasks) => {
       const tasksForDate = prevTasks[formattedDate] || [];
-
-      if (tasksForDate.length === 0) return prevTasks;
-
       const updatedTasksForDate = tasksForDate.filter((_, index) => index !== taskIndex);
 
       return {
@@ -112,7 +104,13 @@ const CalendarPage = ({ toggleDarkMode, isDarkMode }) => {
         <p className='hero_subtitle'>Keep track of your events and schedules effortlessly.</p>
       </div>
       <div className='CalendarPage_content'>
-        <CustomCalendar onSelectDate={(date) => { setCurrentDate(date); toggleModal(); }} />
+        <CustomCalendar
+          onSelectDate={(date) => {
+            setCurrentDate(date);
+            toggleModal();
+          }}
+          tasks={tasks} // Pass tasks to the calendar
+        />
       </div>
       <CalendarModal
         isOpen={isModalOpen}
@@ -120,8 +118,8 @@ const CalendarPage = ({ toggleDarkMode, isDarkMode }) => {
         date={currentDate}
         addTask={addTask}
         removeTask={removeTask}
-        tasks={tasks[currentDate.toDateString()] || []}
-        email={sessionStorage.getItem('userEmail')} 
+        tasks={tasks[currentDate.toISOString().split('T')[0]] || []}
+        email={sessionStorage.getItem('userEmail')}
       />
       <NotificationModal
         isOpen={isNotificationOpen}
@@ -135,7 +133,7 @@ const CalendarPage = ({ toggleDarkMode, isDarkMode }) => {
   );
 };
 
-const CustomCalendar = ({ onSelectDate }) => {
+const CustomCalendar = ({ onSelectDate, tasks }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const today = new Date();
 
@@ -174,14 +172,19 @@ const CustomCalendar = ({ onSelectDate }) => {
     calendarDays.push(<div key={`empty-${i}`} className='calendar-dayempty'></div>);
   }
   for (let day = 1; day <= numberOfDays; day++) {
+    const date = new Date(currentYear, currentDate.getMonth(), day);
+    const formattedDate = date.toISOString().split('T')[0];
+    const hasTasks = tasks[formattedDate] && tasks[formattedDate].length > 0;
     const isToday = isCurrentDay(day);
+
     calendarDays.push(
       <div
         key={day}
-        className={`calendar-day ${isToday ? 'current-day' : ''}`}
-        onClick={() => onSelectDate(new Date(currentYear, currentDate.getMonth(), day))}
+        className={`calendar-day ${isToday ? 'current-day' : ''} ${hasTasks ? 'has-tasks' : ''}`}
+        onClick={() => onSelectDate(date)}
       >
         {day < 10 ? `0${day}` : day}
+        {hasTasks && <div className='task-indicator'></div>}
       </div>
     );
   }
