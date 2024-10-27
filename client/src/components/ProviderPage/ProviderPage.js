@@ -10,9 +10,9 @@ const ProviderPage = ({ toggleDarkMode, isDarkMode }) => {
 
     // Hardcoded primary provider information
     const primaryProvider = {
-        name: "Dr. Jane Smith",
+        name: "Dr. Charlie Smith",
         specialty: "Primary Care Physician",
-        address: "123 Health St, Wellness City, NY 12345",
+        address: "254 Easton Ave, New Brunswick, NJ 08901",
         phone: "(123) 456-7890",
         email: "janesmith@healthmail.com"
     };
@@ -22,21 +22,21 @@ const ProviderPage = ({ toggleDarkMode, isDarkMode }) => {
         {
             name: "Dr. John Doe",
             specialty: "Cardiologist",
-            address: "456 Care Ave, Wellness City, NY 12345",
+            address: "254 Easton Ave, New Brunswick, NJ 08901",
             phone: "(123) 555-0199",
             distance: "1.2 miles"
         },
         {
             name: "Dr. Sarah Lee",
             specialty: "Dermatologist",
-            address: "789 Health Dr, Wellness City, NY 12345",
+            address: "789 Health Dr, Wellness City, NJ 12345",
             phone: "(123) 555-1234",
             distance: "2.5 miles"
         },
         {
             name: "Dr. Emily Wang",
             specialty: "Pediatrician",
-            address: "101 Healing Way, Wellness City, NY 12345",
+            address: "101 Healing Way, Wellness City, NJ 12345",
             phone: "(123) 555-6789",
             distance: "3.0 miles"
         }
