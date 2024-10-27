@@ -10,7 +10,7 @@ from mongoengine import Document, StringField, EmailField, ValidationError, Date
 import re
 import cloudflare
 from cloudflare import run, generatingActivity
-from geopy.geocoders import Nominatim
+#from geopy.geocoders import Nominatim
 
 
 app = Flask(__name__)
