@@ -5,6 +5,7 @@
     transition: background-color 0.3s ease;
     font-family: 'Arial', sans-serif;
     color: #333;
+    margin-left: -8px;
 }
 
 #DashboardPage.dark-mode {
@@ -95,4 +96,12 @@
 
 .dark-mode .DashboardPage_content {
     background-color: #2c3e50;
+}
+
+/* Map section styles */
+.map-section {
+    margin-top: 2rem;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
 }
