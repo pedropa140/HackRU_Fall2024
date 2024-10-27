@@ -152,24 +152,18 @@ const CaregiverDashboardPage = ({ toggleDarkMode, isDarkMode }) => {
 
     return (
         <section id="DashboardPage" className={isDarkMode ? 'dark-mode' : ''}>
-            {isUserSignedIn ? (
+  
                 <NavBarSignedIn
                     toggleDarkMode={toggleDarkMode}
                     isDarkMode={isDarkMode}
                     toggleSignInModal={toggleSignInModal}
                     toggleSignUpModal={toggleSignUpModal}
                 />
-            ) : (
-                <NavBarNotSignedIn
-                    toggleDarkMode={toggleDarkMode}
-                    isDarkMode={isDarkMode}
-                    toggleSignInModal={toggleSignInModal}
-                    toggleSignUpModal={toggleSignUpModal}
-                />
-            )}
+    
+
 
             <div className='DashboardPage_hero'>
-                <h1 className='hero_title'>Hello, {userInfo ? userInfo.firstname : 'User'} {userInfo ? userInfo.lastname : 'User'}!</h1>
+                <h1 className='hero_title'>Hello, {userInfo ? userInfo.firstname : 'Kusum'} {userInfo ? userInfo.lastname : 'Gandham'}!</h1>
                 <p className='hero_subtitle'>
                     Today is {formattedDate} {formattedTime}
                 </p>
