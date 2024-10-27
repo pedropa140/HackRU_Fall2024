@@ -68,6 +68,13 @@ class Patient(Document):
     primaryProvider = PrimaryProvider
     foodTracker = ListField(StringField())
 
+    def set_password(self, raw_password):
+        hashed = bcrypt.hashpw(raw_password.encode('utf-8'), bcrypt.gensalt())
+        self.password = hashed.decode('utf-8')
+
+    def check_password(self, raw_password):
+        return bcrypt.checkpw(raw_password.encode('utf-8'), self.password.encode('utf-8'))
+
 class Caregiver(Document):
     firstName = StringField(required=True)
     lastName =  StringField(required=True)
@@ -90,37 +97,7 @@ def caregiverSignup():
     )
     caregiver.save()
     
-# Patient Signup with password hashing
-@app.route('/api/PatientSignup', methods=['POST'])
-def patientSignup():
-    form_data = request.json
-    firstname = form_data['firstname']
-    lastname = form_data['lastname']
-    email = form_data['email']
-    password = form_data['password']
-    dob = form_data['dob']
-    insurancename = form_data['insurancename']
-    policy_number = form_data['policy_number']    
-    group_number = form_data['group_number']
-
-    insurance = Insurance(
-        name = insurancename,
-        policy_number = policy_number,
-        group_number = group_number,
-    )
-    patient = Patient(
-        firstName = firstname,
-        lastName = lastname,
-        email = email,
-        DOB =  dob,
-        password = password,
-        insurance = insurance
-    )
-    patient.save()
-    return jsonify({"message": "Patient registered successfully!"}), 201
-
-
-@app.route('/api/signup', methods=['POST'])
+@app.route('/api/patientSignup', methods=['POST'])
 def signup():
     form_data = request.json
 
@@ -128,7 +105,7 @@ def signup():
     lastname = form_data.get('lastname')
     email = form_data.get('email')
     password = form_data.get('password')
-    dob = datetime.strptime(form_data.get('dob'), "%m/%d/%Y")
+    dob = datetime.strptime(form_data.get('dob'), "%Y-%m-%d")
     insurancename = form_data.get('insurancename')
     policy_number = form_data.get('policy_number')    
     group_number = form_data.get('group_number')
@@ -136,7 +113,6 @@ def signup():
     if Patient.objects(email=email).first():
         return jsonify({"message": "Email already exists!"}), 400
 
-    # Hashing the password
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     insurance = Insurance(
@@ -154,9 +130,9 @@ def signup():
         insurance=insurance
     )
     patient.save()
-    return jsonify({"message": "Patient registered successfully!"}), 201
+    return jsonify({"message": "User registered successfully!"}), 201
 
-@app.route('/api/signin', methods=['POST'])
+@app.route('/api/PatientSignin', methods=['POST'])
 def patientSignin():
     form_data = request.json
     email = form_data.get('email')
@@ -167,8 +143,7 @@ def patientSignin():
     if not patient:
         return jsonify({"message": "Patient not found!"}), 404
 
-    # Check if provided password matches the stored hashed password
-    if not patient.check_password(password):
+    if not bcrypt.checkpw(password.encode('utf-8'), patient.password.encode('utf-8')):
         return jsonify({"message": "Incorrect password!"}), 401
 
     return jsonify({

@@ -34,6 +34,7 @@ def generatingActivity(model):
             }
         ]
     }
+
     
     response = requests.post(f"{API_BASE_URL}{model}", headers=headers, json=input_data)
     return response.json()
