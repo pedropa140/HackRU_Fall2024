@@ -107,7 +107,7 @@ const SignInPage = ({ toggleDarkMode, isDarkMode }) => {
                         <button type="submit" className="signin-button">Sign In</button>
                     </form>
                     <p className="signup-prompt">
-                        Don't have an account? <a href="/signup" className="signup-link">Sign up here</a>.
+                        Don&apos;t have an account? <a href="/signup" className="signup-link">Sign up here</a>.
                     </p>
                 </div>
             </div>

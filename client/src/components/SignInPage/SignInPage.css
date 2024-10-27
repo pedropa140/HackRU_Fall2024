@@ -20,7 +20,7 @@
 .SignInPage_hero {
     text-align: center;
     padding: 130px 20px 90px;
-    background-color: #66cfff;
+    background-color: #62929E;
     color: white;
     border-bottom: 5px solid #004f7a;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -68,7 +68,7 @@
 .signin-button {
     width: 100%;
     padding: 12px;
-    background-color: #66cfff;
+    background-color: #62929E;
     color: white;
     border: none;
     border-radius: 5px;
@@ -89,7 +89,7 @@
 }
 
 .signup-link {
-    color: #66cfff;
+    color: #62929E;
     text-decoration: none;
 }
 

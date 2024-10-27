@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 import './NavBar.css';
 
+
 const NavBarNotSignedIn = ({ toggleDarkMode, isDarkMode, toggleModal, toggleSignUpModal, toggleSignInModal }) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -30,7 +31,7 @@ const NavBarNotSignedIn = ({ toggleDarkMode, isDarkMode, toggleModal, toggleSign
   return (
     <div className={`NavBar ${isScrolled ? 'scrolled' : ''}`}>
       <h1>
-        <Link to="/" onClick={handleTitleClick}>OUR PLATFORM</Link>
+        <Link to="/" onClick={handleTitleClick}>Memory+</Link>
       </h1>
       <ul className="nav-links">
         <li><Link to="/about" onClick={handleTitleClick}>About Us</Link></li>

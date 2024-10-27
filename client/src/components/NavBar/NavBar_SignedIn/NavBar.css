@@ -8,7 +8,7 @@
     padding-bottom: 10px;
     padding-left: 20px;
     padding-right: 40px;
-    background-color: #66cfff;
+    background-color: #62929E;
     position: fixed;
     top: 0;
     z-index: 1000;
@@ -50,7 +50,7 @@
 }
 
 .NavBar.scrolled h1 a:hover {
-    color: #66cfff;
+    color: #62929E;
     transition: 0.1s ease-in color;
 }
 
@@ -80,7 +80,7 @@
 
 .NavBar.scrolled ul li a:hover,
 .NavBar.scrolled ul li button:hover {
-    color: #66cfff;
+    color: #62929E;
     transition: 0.1s ease-in color;
 }
 
@@ -150,7 +150,7 @@ button:hover {
 
 .user-info-dropdown {
     position: relative;
-    color: #66cfff;
+    color: #62929E;
 }
 
 .user-dropdown {
@@ -170,9 +170,9 @@ button:hover {
     flex-direction: column;
     overflow-y: hidden;
     overflow-x: hidden;
-    border-bottom: 1px solid #66cfff;
-    /* border-left: 1px solid #66cfff;
-    border-right: 1px solid #66cfff; */
+    border-bottom: 1px solid #62929E;
+    /* border-left: 1px solid #62929E;
+    border-right: 1px solid #62929E; */
 }
 
 .user-dropdown ul {
@@ -242,7 +242,7 @@ ul.nav-links .user-dropdown ul button {
 
 .dark-mode.user-dropdown ul a:hover,
 .dark-mode.user-dropdown ul button:hover {
-    background-color: #66cfff;
+    background-color: #62929E;
 }
 
 .dark-mode.user-dropdown ul button:hover li,

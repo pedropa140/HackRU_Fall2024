@@ -88,7 +88,7 @@
 .signup-button {
     width: 100%;
     padding: 12px;
-    background-color: #66cfff;
+    background-color: #62929E;
     color: white;
     border: none;
     border-radius: 5px;
@@ -111,7 +111,7 @@
 }
 
 .signup-link {
-    color: #66cfff;
+    color: #62929E;
     text-decoration: none;
     transition: color 0.3s ease;
 }
@@ -153,7 +153,7 @@
 }
 
 .privacy-policy-checkbox a:hover {
-    color: #66cfff;
+    color: #62929E;
 }
 
 @keyframes fadeIn {

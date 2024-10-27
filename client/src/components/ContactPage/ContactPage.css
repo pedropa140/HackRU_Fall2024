@@ -53,13 +53,13 @@
     font-size: 2.2em;
     margin-top: 30px;
     color: #333;
-    border-left: 4px solid #66cfff;
+    border-left: 4px solid #62929E;
     padding-left: 15px;
 }
 
 #ContactPage.dark-mode .contact-page-content h2 {
     color: #f0f0f0;
-    border-color: #66cfff;
+    border-color: #62929E;
 }
 
 .contact-page-content p {
@@ -100,7 +100,7 @@
 
 .contact-page-content input:focus,
 .contact-page-content textarea:focus {
-    border-color: #66cfff;
+    border-color: #62929E;
     box-shadow: 0 0 5px rgba(102, 207, 255, 0.5);
     outline: none;
 }
@@ -118,7 +118,7 @@
 
 .contact-page-content button {
     padding: 12px 24px;
-    background-color: #66cfff;
+    background-color: #62929E;
     color: white;
     border: none;
     border-radius: 8px;
@@ -134,7 +134,7 @@
 }
 
 #ContactPage.dark-mode .contact-page-content button {
-    background-color: #66cfff;
+    background-color: #62929E;
 }
 
 #ContactPage.dark-mode .contact-page-content button:hover {
@@ -186,11 +186,11 @@
 }
 
 .ContactPage_footer .footer_links a:hover {
-    color: #66cfff;
+    color: #62929E;
 }
 
 #ContactPage.dark-mode .ContactPage_footer .footer_links a:hover {
-    color: #66cfff;
+    color: #62929E;
 }
 
 .ContactPage_footer p {

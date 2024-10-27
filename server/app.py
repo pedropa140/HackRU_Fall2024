@@ -1,3 +1,4 @@
+import bcrypt
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -6,7 +7,7 @@ import mongoengine
 import certifi
 from datetime import datetime, timezone
 from pymongo.mongo_client import MongoClient
-from mongoengine import Document, StringField, EmailField, ValidationError, DateTimeField, ReferenceField, ListField, FloatField, EmbeddedDocument, EmbeddedDocumentField
+from mongoengine import Document, StringField, EmailField, ValidationError, DateTimeField, ListField, FloatField, EmbeddedDocument, EmbeddedDocumentField
 import re
 import cloudflare
 from cloudflare import run
@@ -14,11 +15,8 @@ from cloudflare import run
 app = Flask(__name__)
 load_dotenv()
 
-API_BASE_URL = "https://api.cloudflare.com/client/v4/accounts/ce787f621d3df59e07bd0ff342723ae1/ai/run/"
-api_key = os.getenv("GENAI_API_KEY")
 MONGODB_URL = os.getenv('MONGODB_URI')
 client = MongoClient(MONGODB_URL, tlsCAFile=certifi.where())
-
 
 try:
     client.admin.command('ping')
@@ -28,6 +26,7 @@ except Exception as e:
 
 mongoengine.connect(host=MONGODB_URL, tlsCAFile=certifi.where())
 
+# MongoDB Models
 class Coordinate(EmbeddedDocument):
     latitude = FloatField(required=True)
     longitude = FloatField(required=True)
@@ -55,10 +54,11 @@ class Activity(EmbeddedDocument):
     Type = StringField(required=True)
     Date = DateTimeField(required=True)
     Location = ListField(EmbeddedDocumentField(Coordinate))
-class Patient (Document):
+
+class Patient(Document):
     firstName = StringField(required=True)
     lastName = StringField(required=True)
-    email = EmailField(required=True)
+    email = EmailField(required=True, unique=True)
     DOB = DateTimeField(required=True)
     password = StringField(required=True)
     coordinates = EmbeddedDocumentField(Coordinate)
@@ -67,7 +67,6 @@ class Patient (Document):
     activities = ListField(EmbeddedDocumentField(Activity))
     primaryProvider = PrimaryProvider
     foodTracker = ListField(StringField())
-CORS(app)
 
 class Caregiver(Document):
     firstName = StringField(required=True)
@@ -83,7 +82,8 @@ def caregiverSignup():
     lastname = form_data['lastname']
     
 
-@app.route('/api/patientSignup', methods=['POST'])
+# Patient Signup with password hashing
+@app.route('/api/PatientSignup', methods=['POST'])
 def patientSignup():
     form_data = request.json
     firstname = form_data['firstname']
@@ -118,70 +118,97 @@ def signup():
 
     firstname = form_data.get('firstname')
     lastname = form_data.get('lastname')
-    username = form_data.get('username')
     email = form_data.get('email')
     password = form_data.get('password')
-    
-    if User.objects(username=username).first():
-        return jsonify({"message": "Username already exists!"}), 400
-    if User.objects(email=email).first():
+    dob = datetime.strptime(form_data.get('dob'), "%m/%d/%Y")
+    insurancename = form_data.get('insurancename')
+    policy_number = form_data.get('policy_number')    
+    group_number = form_data.get('group_number')
+
+    if Patient.objects(email=email).first():
         return jsonify({"message": "Email already exists!"}), 400
 
-    try:
-        user = User(
-            firstname=firstname,
-            lastname=lastname,
-            username=username,
-            email=email
-        )
-        user.set_password(password)
-        user.save()
+    # Hashing the password
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-        return jsonify({"message": "User registered successfully!"}), 201
-    except ValidationError as ve:
-        return jsonify({"message": str(ve)}), 400
-    except Exception as e:
-        return jsonify({"message": "An error occurred while creating the user."}), 500
+    insurance = Insurance(
+        name=insurancename,
+        policy_number=policy_number,
+        group_number=group_number,
+    )
 
+    patient = Patient(
+        firstName=firstname,
+        lastName=lastname,
+        email=email,
+        DOB=dob,
+        password=hashed_password.decode('utf-8'),
+        insurance=insurance
+    )
+    patient.save()
+    return jsonify({"message": "Patient registered successfully!"}), 201
 
+@app.route('/api/signin', methods=['POST'])
+def patientSignin():
+    form_data = request.json
+    email = form_data.get('email')
+    password = form_data.get('password')
+
+    patient = Patient.objects(email=email).first()
+
+    if not patient:
+        return jsonify({"message": "Patient not found!"}), 404
+
+    # Check if provided password matches the stored hashed password
+    if not patient.check_password(password):
+        return jsonify({"message": "Incorrect password!"}), 401
+
+    return jsonify({
+        "message": "Signed in successfully!",
+        "email": patient.email,
+    }), 200
+
+# Get Patient Info
 @app.route('/api/userinfo', methods=['GET'])
 def get_user_info():
     user_email = request.args.get('email')
+    patient = Patient.objects(email=user_email).first()
 
-    user = User.objects(email=user_email).first()
-
-    if user:
+    if patient:
         return jsonify({
-            "firstname": user.firstname,
-            "lastname": user.lastname,
-            "username": user.username,
-            "email": user.email,
-            "datecreated": user.created_at
+            "firstname": patient.firstName,
+            "lastname": patient.lastName,
+            "email": patient.email,
+            "DOB": patient.DOB,
+            "insurance": {
+                "name": patient.insurance.name,
+                "policy_number": patient.insurance.policy_number,
+                "group_number": patient.insurance.group_number
+            }
         }), 200
     else:
-        return jsonify({"message": "User not found!"}), 404
+        return jsonify({"message": "Patient not found!"}), 404
 
+# Update Patient Info
 @app.route('/api/updateuserinfo', methods=['PUT'])
 def update_user_info():
     data = request.json
-
     user_email = data.get('email')
     new_firstname = data.get('firstname')
     new_lastname = data.get('lastname')
-    new_username = data.get('username')
 
-    user = User.objects(email=user_email).first()
+    patient = Patient.objects(email=user_email).first()
 
-    if user:
-        user.update(
-            set__firstname=new_firstname,
-            set__lastname=new_lastname,
-            set__username=new_username
+    if patient:
+        patient.update(
+            set__firstName=new_firstname,
+            set__lastName=new_lastname
         )
-        return jsonify({"message": "User information updated successfully!"}), 200
+        return jsonify({"message": "Patient information updated successfully!"}), 200
     else:
-        return jsonify({"message": "User not found!"}), 404
+        return jsonify({"message": "Patient not found!"}), 404
 
+# Update Patient Password
 @app.route('/api/updatepassword', methods=['PUT'])
 def update_password():
     data = request.json
@@ -189,30 +216,31 @@ def update_password():
     old_password = data.get('oldPassword')
     new_password = data.get('newPassword')
 
-    user = User.objects(email=user_email).first()
+    patient = Patient.objects(email=user_email).first()
 
-    if not user:
-        return jsonify({"message": "User not found!"}), 404
+    if not patient:
+        return jsonify({"message": "Patient not found!"}), 404
 
-    if not user.check_password(old_password):
+    if not bcrypt.checkpw(old_password.encode('utf-8'), patient.password.encode('utf-8')):
         return jsonify({"message": "Incorrect old password!"}), 400
 
-    user.set_password(new_password)
-    user.save()
-
+    # Update to new hashed password
+    hashed_new_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+    patient.update(set__password=hashed_new_password.decode('utf-8'))
     return jsonify({"message": "Password updated successfully!"}), 200
 
+# Delete Patient Account
 @app.route('/api/deleteaccount', methods=['DELETE'])
 def delete_account():
     user_email = request.args.get('email')
 
-    user = User.objects(email=user_email).first()
+    patient = Patient.objects(email=user_email).first()
 
-    if not user:
-        return jsonify({"message": "User not found!"}), 404
+    if not patient:
+        return jsonify({"message": "Patient not found!"}), 404
 
-    user.delete()
-    return jsonify({"message": "User account deleted successfully!"}), 200
+    patient.delete()
+    return jsonify({"message": "Patient account deleted successfully!"}), 200
 
 @app.route('/api/sendmessage', methods=['POST'])
 def send_message():
@@ -361,7 +389,6 @@ def remove_task():
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
-
 
 if __name__ == '__main__':
     app.run(debug=True)

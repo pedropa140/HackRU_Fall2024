@@ -15,7 +15,7 @@ const AccountDeletedPage = ({ toggleDarkMode, isDarkMode }) => {
                 isDarkMode={isDarkMode}
             />
             <h1 className='account-deleted-container-header'>Account Deleted</h1>
-            <p>Your account has been successfully deleted. We're sorry to see you go.</p>
+            <p>Your account has been successfully deleted. We&apos;re sorry to see you go.</p>
             <p>If this was a mistake, please reach out to our support team.</p>
             <Link to="/" className="home-link">Return to Home</Link>
         </section>

@@ -18,7 +18,7 @@
 .CalendarPage_hero {
     text-align: center;
     padding: 130px 20px 90px 20px;
-    background-color: #66cfff;
+    background-color: #62929E;
     color: white;
     transition: background-color 0.3s ease, color 0.3s ease;
     border-bottom: 5px solid #004f7a;
@@ -86,7 +86,7 @@
 }
 
 .calendar-header button {
-    background-color: #66cfff;
+    background-color: #62929E;
     color: white;
     border: none;
     padding: 15px 20px;
@@ -151,7 +151,7 @@
 }
 
 .calendar-day:hover {
-    background-color: #66cfff;
+    background-color: #62929E;
     cursor: pointer;
     color: white;
     transform: scale(1.02);
