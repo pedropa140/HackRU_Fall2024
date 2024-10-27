@@ -122,7 +122,9 @@ const DashboardPage = ({ toggleDarkMode, isDarkMode }) => {
                 </button>
             </div>
 
-            <div className='DashboardPage_content'><MapComponent /></div>
+            <div className="map-section">
+                    <MapComponent />
+                </div>
             <Footer />
         </section>
     );
