@@ -77,23 +77,14 @@ const ChatBotPage = ({ toggleDarkMode, isDarkMode }) => {
             <NavBarSignedIn toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
             <div className='ChatBotPage_hero'>
                 <h1 className='hero_title'>Chatbot</h1>
-                <p className='hero_subtitle'>
-                    Powered by Gemini AI by <b>
-                        <span style={{ color: "#4285F4" }}>G</span>
-                        <span style={{ color: "#DB4437" }}>o</span>
-                        <span style={{ color: "#F4B400" }}>o</span>
-                        <span style={{ color: "#4285F4" }}>g</span>
-                        <span style={{ color: "#0F9D58" }}>l</span>
-                        <span style={{ color: "#DB4437" }}>e</span>
-                    </b>
-                </p>
+      
 
                 {/* TODO: FIX CHATBOT FORM DESIGN AND LOADING. ADD SCROLL TO THE CONTENT*/}
                 <form onSubmit={handleSubmit} className='styled-form'>
                     <input
                         type="text"
                         value={inputValue}
-                        placeholder='Talk to Gemini AI'
+                        placeholder='Talk to AI'
                         onChange={(e) => setInputValue(e.target.value)}
                         disabled={isLoading}
                     />
